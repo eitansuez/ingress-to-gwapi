@@ -65,11 +65,30 @@ The output will show a GatewayClass named `kgateway` (and another one for provis
 
 We now have a running control plane.
 
-The next step is to provision a gateway; for that we'll use the Gateway resource.
+The next step is to provision a gateway; for that we use the Gateway resource.
 
 ## Translate the Ingress configurations
 
-Install ingress2gateway
+Before we dive in to creating the necessary Gateway API resources, we should consider options.
+
+We can try to use a tool to translate the existing Ingress resources.
+When the number or quantity of configuration files is large, and where the alternative of drafting the configurations by hand can be both tedious and error-prone, using a tool is usually the better option.
+On the other hand, tools are often incomplete, they don't always implement a spec fully, and are more mechanistic, in that they don't have intimate understanding of the original and target APIs and their nuances.
+
+As long as the quantity of configuration is small, the translations can be performed manually.
+For large numbers of files, we can try to use a tool in combination with human review and testing to ensure correctness.
+
+These days we have a third option:  leveraging an LLM to translate our configurations.
+This can be a viable option, but also comes with caveats:  it may be a security risk to divulge internal configurations if using an external provider.
+Also LLMs are not impervious to making mistakes, and so their output needs to be reviewed and sometimes corrected.
+
+### Ingress2gateway
+
+The Kubernetes community provides a tool named [ingress2gateway](https://kubernetes.io/blog/2023/10/25/introducing-ingress2gateway/) designed specifically for this purpose.
+
+Follow the instructions to install the tool's CLI on your machine.
+
+
 Generate gw api artifacts from ingress api resources
 Review generated artifacts
 
@@ -81,6 +100,10 @@ Explore ingress2gateway.
 ## Vet the revised configurations
 
 configure the gateway
+
+## Provision a Gateway
+
+TODO
 
 ## Switching over
 
