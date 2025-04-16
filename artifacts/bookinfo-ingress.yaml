@@ -38,7 +38,7 @@ spec:
             name: productpage
             port:
               number: 9080
-      - path: /api/v1/proxucts
+      - path: /api/v1/products
         pathType: Prefix
         backend:
           service:

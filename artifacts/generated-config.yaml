@@ -1,0 +1,128 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
+  creationTimestamp: null
+  name: nginx
+  namespace: bookinfo
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - hostname: bookinfo.example.com
+    name: bookinfo-example-com-http
+    port: 80
+    protocol: HTTP
+  - hostname: bookinfo.example.com
+    name: bookinfo-example-com-https
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - group: null
+        kind: null
+        name: bookinfo-cert
+status: {}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
+  creationTimestamp: null
+  name: nginx
+  namespace: httpbin
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - hostname: httpbin.example.com
+    name: httpbin-example-com-http
+    port: 80
+    protocol: HTTP
+  - hostname: httpbin.example.com
+    name: httpbin-example-com-https
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - group: null
+        kind: null
+        name: httpbin-cert
+status: {}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
+  creationTimestamp: null
+  name: bookinfo-ingress-bookinfo-example-com
+  namespace: bookinfo
+spec:
+  hostnames:
+  - bookinfo.example.com
+  parentRefs:
+  - name: nginx
+  rules:
+  - backendRefs:
+    - name: productpage
+      port: 9080
+    matches:
+    - path:
+        type: Exact
+        value: /productpage
+  - backendRefs:
+    - name: productpage
+      port: 9080
+    matches:
+    - path:
+        type: PathPrefix
+        value: /static
+  - backendRefs:
+    - name: productpage
+      port: 9080
+    matches:
+    - path:
+        type: Exact
+        value: /login
+  - backendRefs:
+    - name: productpage
+      port: 9080
+    matches:
+    - path:
+        type: Exact
+        value: /logout
+  - backendRefs:
+    - name: productpage
+      port: 9080
+    matches:
+    - path:
+        type: PathPrefix
+        value: /api/v1/products
+status:
+  parents: []
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
+  creationTimestamp: null
+  name: httpbin-ingress-httpbin-example-com
+  namespace: httpbin
+spec:
+  hostnames:
+  - httpbin.example.com
+  parentRefs:
+  - name: nginx
+  rules:
+  - backendRefs:
+    - name: httpbin
+      port: 8000
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+status:
+  parents: []
