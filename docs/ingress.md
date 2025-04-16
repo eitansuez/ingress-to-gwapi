@@ -32,7 +32,7 @@ export GW_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -ojsonp
 
 When making an HTTP request, we can use [curl's `--resolve` flag](https://everything.curl.dev/usingcurl/connections/name.html#provide-a-custom-ip-address-for-a-name) to simulate DNS resolution of the host name to the gateway IP address.
 
-Test the following example call to `httpbin`'s `/get` endpoint:
+Test the following example call to [`httpbin`'s `/get`](https://httpbin.org/#/HTTP_Methods/get_get) endpoint:
 
 ```shell
 curl http://httpbin.example.com/get --resolve httpbin.example.com:80:$GW_IP | jq

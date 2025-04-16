@@ -15,7 +15,7 @@ nav:
 - index.md
 - setup.md
 - ingress.md
-- tls.md
+- https.md
 - migration.md
 markdown_extensions:
 - admonition

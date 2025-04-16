@@ -16,6 +16,8 @@ Deploy two distinct applications, each to its own namespace:
 
 ### `httpbin`
 
+[`httpbin`](httpbin.org) is a sample application useful for testing HTTP communications.
+
 ```shell
 k create ns httpbin
 ```
@@ -25,6 +27,8 @@ k apply -n httpbin -f https://raw.githubusercontent.com/istio/istio/refs/heads/m
 ```
 
 ### `bookinfo`
+
+[`bookinfo`](https://istio.io/latest/docs/examples/bookinfo/) is one of Istio's sample applications, consisting of four microservices.
 
 ```shell
 k create ns bookinfo

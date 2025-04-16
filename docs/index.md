@@ -1,6 +1,4 @@
-# Migrating from ingress-nginx to Gateway API
-
-## Introduction
+# Introduction
 
 In the early days of Kubernetes, teams started migrating their workloads from VMs to Kubernetes.
 Teams set to work on containerizing and publishing their applications and services to container registries.
@@ -28,41 +26,18 @@ Using the older implementation is becoming a sort of technical debt.
 In this document, we will use a companion sample project that starts out using the ingress-nginx controller with the Ingress API.
 We will walk through and explore migrating this project to the Gateway API.
 
-For the new controller, We will explore [kgateway](https://kgateway.dev/), an open-source project recently contributed to the CNCF by Solo.io, and which implements the Kubernetes Gateway API.
+For the new controller, we will explore [kgateway](https://kgateway.dev/), an open-source project recently contributed to the CNCF by Solo.io, and which implements the Kubernetes Gateway API.
 
-## The example project
+## What next?
 
-[tbd]
+Follow the instructions on the next page to begin setting up your environment.
 
-instructions:
-- clone the repo
-- provision a cluster
-- deploy the workloads / applications
-- apply the ingress configurations (https and manifests with tls termination)
-- test it
+Your first goal will be to reach an initial state where:
 
-## Tooling for migration
+- You have a Kubernetes cluster hosting two distinct applications, with
+- The ingress-nginx controller installed
+- Ingress resources configuring the flow of ingress traffic to your APIs and applications
 
-Explore ingress2gateway.
+You will next configure ingress with HTTPS to simulate a setup that is more aligned with real-world environment.
 
-## The Gateway API
-
-Discuss how gw api is different from the ingress api
-
-## Install kgateway
-
-control plane
-provision a gateway dynamically
-discuss how now have more flexibility - can deploy multiple gateways, can use either a shared or dedicated model.
-
-configure the gateway
-switching dns
-progressive transition
-decommission ingress-nginx
-no more ingress api
-
-## Summary
-
-this isn't the end of the road.
-we haven't even discussed service mesh.
-in addition to configuring ingress, the gateway api can be leveraged to configure routing for internal traffic.
+From there, we explore migration to the Kubernetes Gateway API.
