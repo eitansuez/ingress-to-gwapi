@@ -3,6 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: httpbin-ingress
+  namespace: httpbin
 spec:
   ingressClassName: nginx
   rules:
@@ -14,6 +15,5 @@ spec:
         backend:
           service:
             name: httpbin
-            namespace: httpbin
             port:
               number: 8000

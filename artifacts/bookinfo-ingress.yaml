@@ -3,6 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: bookinfo-ingress
+  namespace: bookinfo
 spec:
   ingressClassName: nginx
   rules:
@@ -14,7 +15,6 @@ spec:
         backend:
           service:
             name: productpage
-            namespace: bookinfo
             port:
               number: 9080
       - path: /static
@@ -22,7 +22,6 @@ spec:
         backend:
           service:
             name: productpage
-            namespace: bookinfo
             port:
               number: 9080
       - path: /login
@@ -30,7 +29,6 @@ spec:
         backend:
           service:
             name: productpage
-            namespace: bookinfo
             port:
               number: 9080
       - path: /logout
@@ -38,7 +36,6 @@ spec:
         backend:
           service:
             name: productpage
-            namespace: bookinfo
             port:
               number: 9080
       - path: /api/v1/proxucts
@@ -46,6 +43,5 @@ spec:
         backend:
           service:
             name: productpage
-            namespace: bookinfo
             port:
               number: 9080
