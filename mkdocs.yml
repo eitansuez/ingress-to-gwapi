@@ -1,4 +1,6 @@
 site_name: Migrating from Ingress to Gateway API
+site_url: https://eitansuez.github.io/ingress-to-gwapi/
+repo_url: https://github.com/eitansuez/ingress-to-gwapi
 theme:
   name: material
   features:
@@ -30,3 +32,5 @@ markdown_extensions:
     base_path: artifacts
     check_paths: true
 - attr_list
+- pymdownx.tabbed:
+    alternate_style: true

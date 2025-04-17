@@ -2,13 +2,32 @@
 
 ## Provision a cluster
 
-```shell
-k3d cluster create my-istio-cluster \
-    --api-port 6443 \
-    --k3s-arg "--disable=traefik@server:0" \
-    --port 80:80@loadbalancer \
-    --port 443:443@loadbalancer
-```
+Feel free to provision a Kubernetes cluster any way you prefer.
+The main requirement is that the environment support the assignment of an external IP address to LoadBalancer-type services.
+
+=== "GCP"
+
+    Here is an example command to provision a 3-node cluster on GCP (GKE) using the `gcloud` CLI:
+
+    ```shell
+    gcloud container clusters create my-k8s-cluster \
+      --cluster-version latest \
+      --machine-type "e2-standard-2" \
+      --num-nodes "3" \
+      --network "default"
+    ```
+
+=== "Local"
+
+    Here is an example command to provision a local cluster with [k3d](https://k3d.io):
+
+    ```shell
+    k3d cluster create my-istio-cluster \
+        --api-port 6443 \
+        --k3s-arg "--disable=traefik@server:0" \
+        --port 80:80@loadbalancer \
+        --port 443:443@loadbalancer
+    ```
 
 ## Deploy two distinct workloads
 
