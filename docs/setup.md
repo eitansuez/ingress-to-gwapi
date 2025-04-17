@@ -90,3 +90,10 @@ Also note the presence of a default ingress class named `nginx` that can be used
 ```shell
 k get ingressclass
 ```
+
+## Next
+
+The subsequent instructions reference various yaml artifacts that you will need to apply to your cluster at different points in time.
+You may obtain a copy of each file by copying and pasting directly from the instructions.
+It may be more practical however to clone this repository (see the GitHub link in the top bar);
+you will find the yaml files under the folder named `artifacts`.
