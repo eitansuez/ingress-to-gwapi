@@ -522,43 +522,61 @@
 
 <h1 id="setup">Setup</h1>
 <h2 id="provision-a-cluster">Provision a cluster</h2>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>k3d<span class="w"> </span>cluster<span class="w"> </span>create<span class="w"> </span>my-istio-cluster<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>--api-port<span class="w"> </span><span class="m">6443</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--k3s-arg<span class="w"> </span><span class="s2">&quot;--disable=traefik@server:0&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">80</span>:80@loadbalancer<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">443</span>:443@loadbalancer
+<p>Feel free to provision a Kubernetes cluster any way you prefer.
+The main requirement is that the environment support the assignment of an external IP address to LoadBalancer-type services.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">GCP</label><label for="__tabbed_1_2">Local</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Here is an example command to provision a 3-node cluster on GCP (GKE) using the <code>gcloud</code> CLI:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>create<span class="w"> </span>my-k8s-cluster<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--cluster-version<span class="w"> </span>latest<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--machine-type<span class="w"> </span><span class="s2">&quot;e2-standard-2&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--num-nodes<span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--network<span class="w"> </span><span class="s2">&quot;default&quot;</span>
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Here is an example command to provision a local cluster with <a href="https://k3d.io">k3d</a>:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>k3d<span class="w"> </span>cluster<span class="w"> </span>create<span class="w"> </span>my-istio-cluster<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span>--api-port<span class="w"> </span><span class="m">6443</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--k3s-arg<span class="w"> </span><span class="s2">&quot;--disable=traefik@server:0&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">80</span>:80@loadbalancer<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--port<span class="w"> </span><span class="m">443</span>:443@loadbalancer
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="deploy-two-distinct-workloads">Deploy two distinct workloads</h2>
 <p>Deploy two distinct applications, each to its own namespace:</p>
 <h3 id="httpbin"><code>httpbin</code></h3>
 <p><a href="httpbin.org"><code>httpbin</code></a> is a sample application useful for testing HTTP communications.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>k<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>httpbin
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>k<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>httpbin
 </span></code></pre></div>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>k<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
 </span></code></pre></div>
 <h3 id="bookinfo"><code>bookinfo</code></h3>
 <p><a href="https://istio.io/latest/docs/examples/bookinfo/"><code>bookinfo</code></a> is one of Istio's sample applications, consisting of four microservices.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>bookinfo
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>k<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>bookinfo
 </span></code></pre></div>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>k<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>k<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
 </span></code></pre></div>
 <p>Both sets of workloads should now be running in their respective namespaces:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>httpbin
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>httpbin
 </span></code></pre></div>
 <p>And:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>bookinfo
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>bookinfo
 </span></code></pre></div>
 <h2 id="install-ingress-nginx">Install ingress-nginx</h2>
 <p>Follow instructions from the project <a href="https://kubernetes.github.io/ingress-nginx/deploy/#quick-start">quickstart</a>:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--repo<span class="w"> </span>https://kubernetes.github.io/ingress-nginx<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--namespace<span class="w"> </span>ingress-nginx<span class="w"> </span>--create-namespace
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--repo<span class="w"> </span>https://kubernetes.github.io/ingress-nginx<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--namespace<span class="w"> </span>ingress-nginx<span class="w"> </span>--create-namespace
 </span></code></pre></div>
 <p>Verify that the controller is running (it can take a minute before the pod reaches READY state):</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
 <p>Also note the presence of a default ingress class named <code>nginx</code> that can be used to associate any Ingress resources we create with this particular controller:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>k<span class="w"> </span>get<span class="w"> </span>ingressclass
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>k<span class="w"> </span>get<span class="w"> </span>ingressclass
 </span></code></pre></div>
 
 
