@@ -1097,8 +1097,8 @@ The tool does not perform intelligent analysis of the cluster, and will not take
 </span><span id="__span-11-128"><a id="__codelineno-11-128" name="__codelineno-11-128"></a><span class="w">  </span><span class="nt">parents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </span></code></pre></div></td></tr></table></div>
 <p>The other glaring difference between what the tool produced compared to what a human would, is the repetition of the <code>backendRefs</code> section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule with multiple <code>matches</code> and a single <code>backendRef</code>.</p>
-<p>Finally, the tool has no way of knowing (or does not provide a way to specify) what <code>gatewayClassName</code> to use for the translated resource, and so we much edit that value as well (to <code>kgateway</code>).</p>
-<p>In summary, using <code>ingress2gateway</code> is useful and insightful, but produces only a starting point for review, and evaluation.
+<p>Finally, the tool has no way of knowing (or does not provide a way to specify) what <code>gatewayClassName</code> to use for the translated resource, and so we must edit that value as well (to <code>kgateway</code>).</p>
+<p>In summary, using <code>ingress2gateway</code> is useful and insightful, but produces only a starting point for review and evaluation.
 We must then make implementation decisions and, from the generated output, derive and craft the final Gateway API resource artifacts.</p>
 <p>We opt to provision a single gateway, with two separate HTTPRoute resources, one per application.</p>
 <h2 id="provision-the-gateway">Provision the Gateway</h2>
@@ -1331,14 +1331,14 @@ We must then make implementation decisions and, from the generated output, deriv
 <ul>
 <li>We place this HTTPRoute in <code>kgateway-system</code>; it is not a concern of the application development teams.</li>
 <li>The routing rule binds to (applies to) the <code>http</code> listener only.</li>
-<li>The rule uses the <a href="https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter">RequestRedirect</a> filter to redirect the request to the https scheme, otherwise preserving the original URL.</li>
+<li>The rule uses the <a href="https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter">RequestRedirect</a> filter to redirect the request to the <code>https</code> scheme, otherwise preserving the original URL.</li>
 </ul>
 <h2 id="test-the-configuration">Test the configuration</h2>
 <p>When we begin testing our setup, the first thing we learn is that the routes did not attach to the gateway:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-route<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
 <p>Here is the output of the <code>status</code> section:</p>
-<div class="language-yaml highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">route status</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-24-1"> 1</a></span>
+<div class="language-yaml highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Route status</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-24-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-24-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-24-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-24-4"> 4</a></span>
@@ -1382,7 +1382,7 @@ We must then make implementation decisions and, from the generated output, deriv
 </span><span id="__span-24-21"><a id="__codelineno-24-21" name="__codelineno-24-21"></a><span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kgateway-system</span>
 </span><span id="__span-24-22"><a id="__codelineno-24-22" name="__codelineno-24-22"></a><span class="w">      </span><span class="nt">sectionName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">httpbin-https</span>
 </span></code></pre></div></td></tr></table></div>
-<p>The condition <em>"Accepted=False"</em> with the reason <em>"NotAllowedByListeners"</em> stems from the fact that our gateway is not configured to allow routes from different namespaces to attach to it.</p>
+<p>The condition <em>"Accepted=False"</em> with the reason <em>"NotAllowedByListeners"</em> is due to the fact that the gateway is not configured to allow routes from different namespaces to attach to it.</p>
 <p>It stems from the decision we made to use a shared gateway and to place it in a separate namespace.
 Application namespaces must be designated such that routes defined within them are permitted to attach.</p>
 <p>Here is a revised Gateway resource with explicit <code>allowedRoutes</code> rules for each listener:</p>
@@ -1472,7 +1472,7 @@ Application namespaces must be designated such that routes defined within them a
 </span></span><span id="__span-25-42"><a id="__codelineno-25-42" name="__codelineno-25-42"></a><span class="hll"><span class="w">          </span><span class="nt">matchLabels</span><span class="p">:</span>
 </span></span><span id="__span-25-43"><a id="__codelineno-25-43" name="__codelineno-25-43"></a><span class="hll"><span class="w">            </span><span class="nt">self-serve-ingress</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
 </span></span></code></pre></div></td></tr></table></div>
-<p>The convention is to label each namespace with <code>self-serve-ingress="true"</code> to allow both applications to define routes against the shared gateway:</p>
+<p>Above, we define a convention: to label each namespace with <code>self-serve-ingress="true"</code> to allow both applications to define routes against the shared gateway:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>label<span class="w"> </span>ns<span class="w"> </span>httpbin<span class="w"> </span>self-serve-ingress<span class="o">=</span><span class="nb">true</span>
 </span></code></pre></div>
 <p>And:</p>
@@ -1481,7 +1481,7 @@ Application namespaces must be designated such that routes defined within them a
 <p>Check the routes again:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-route<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
-<p>This time the <em>Accepted</em> condition should be <em>True</em>.</p>
+<p>This time the <em>Accepted</em> condition is <em>True</em>.</p>
 <p>We can also check on the status of the gateway itself:  each listener should have one attached route:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>kgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
@@ -1512,7 +1512,7 @@ Each has its own distinct public IP address.</p>
 You should notice that all traffic to the hostname now goes through the new gateway, while the old gateway will cease to receive traffic.</p>
 <p>Next, we can make the analogous DNS change for the <code>bookinfo</code> hostname, and observe that traffic begins to flow through the new gateway for <code>bookinfo</code> workloads too.</p>
 <p>This points to the fact that it is possible to migrate from ingress-nginx to kgateway in a piecemeal fashion:
-Teams can work at different pace and each migrate to the new gateway on their own schedule.</p>
+teams can work at different pace and each migrate to the new gateway on their own schedule.</p>
 <p>When all teams have completed their migration, we can finally decommission the old gateway.</p>
 <h2 id="decomission-ingress-nginx">Decomission ingress-nginx</h2>
 <p>Decommissioning the old gateway involves undoing the original ingress setup:</p>
@@ -1530,6 +1530,7 @@ kgateway provides capabilities that will take your environment well beyond what 
 <li>Use kgateway as an egress gateway to control traffic exiting your environment.</li>
 <li>Use kgateway's AI capabilities to secure your LLM applications as they make requests to external LLM providers.</li>
 </ol>
+<p>For more information about these capabilities, visit the <a href="https://kgateway.dev/">kgateway.dev</a> web site.</p>
 
 
 
