@@ -688,6 +688,7 @@
 <p>Apply the configuration:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>bookinfo-ingress.yaml
 </span></code></pre></div>
+<p>ingress-nginx uses a shared gateway model:  multiple Ingress resources will program the same singular gateway.</p>
 <h3 id="test-ingress_1">Test ingress</h3>
 <p>We can test ingress to the <code>bookinfo</code> application in a fashion similar to what we did above:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>http://bookinfo.example.com/productpage<span class="w"> </span>--resolve<span class="w"> </span>bookinfo.example.com:80:<span class="nv">$GW_IP</span>
