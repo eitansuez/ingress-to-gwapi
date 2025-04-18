@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.2afb09e1.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -568,21 +568,21 @@ The main requirement is that the environment support the assignment of an extern
 <p>Deploy two distinct applications, each to its own namespace:</p>
 <h3 id="httpbin"><code>httpbin</code></h3>
 <p><a href="httpbin.org"><code>httpbin</code></a> is a sample application useful for testing HTTP communications.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>k<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>httpbin
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>httpbin
 </span></code></pre></div>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
 </span></code></pre></div>
 <h3 id="bookinfo"><code>bookinfo</code></h3>
 <p><a href="https://istio.io/latest/docs/examples/bookinfo/"><code>bookinfo</code></a> is one of Istio's sample applications, consisting of four microservices.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>k<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>bookinfo
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>bookinfo
 </span></code></pre></div>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>k<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
 </span></code></pre></div>
 <p>Both sets of workloads should now be running in their respective namespaces:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>httpbin
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>httpbin
 </span></code></pre></div>
 <p>And:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>bookinfo
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>bookinfo
 </span></code></pre></div>
 <h2 id="install-ingress-nginx">Install ingress-nginx</h2>
 <p>Follow instructions from the project <a href="https://kubernetes.github.io/ingress-nginx/deploy/#quick-start">quickstart</a>:</p>
@@ -591,10 +591,10 @@ The main requirement is that the environment support the assignment of an extern
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--namespace<span class="w"> </span>ingress-nginx<span class="w"> </span>--create-namespace
 </span></code></pre></div>
 <p>Verify that the controller is running (it can take a minute before the pod reaches READY state):</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>k<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
 <p>Also note the presence of a default ingress class named <code>nginx</code> that can be used to associate any Ingress resources we create with this particular controller:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>k<span class="w"> </span>get<span class="w"> </span>ingressclass
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>ingressclass
 </span></code></pre></div>
 <h2 id="next">Next</h2>
 <p>The subsequent instructions reference various yaml artifacts that you will need to apply to your cluster at different points in time.

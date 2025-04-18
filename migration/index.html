@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.2afb09e1.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -795,10 +795,10 @@ For this migration we will use <a href="https://kgateway.dev/">kgateway</a>, an 
 </li>
 </ol>
 <p>We can verify the installation by listing deployments in the newly-created <code>kgateway-system</code> namespace:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-n<span class="w"> </span>kgateway-system
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-n<span class="w"> </span>kgateway-system
 </span></code></pre></div>
 <p>We can also list GatewayClass resources, which are the Gateway API's equivalent to the IngressClass concept:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>k<span class="w"> </span>get<span class="w"> </span>gatewayclass
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gatewayclass
 </span></code></pre></div>
 <p>The output will show a GatewayClass named <code>kgateway</code> (and another one for provisioning waypoints, which is out of scope at the moment).</p>
 <p>We now have a running control plane.</p>
@@ -1174,14 +1174,14 @@ We must then make implementation decisions and, from the generated output, deriv
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>--cert<span class="o">=</span>bookinfo.crt<span class="w"> </span>--key<span class="o">=</span>bookinfo.key
 </span></code></pre></div>
 <p>Apply the Gateway resource:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>k<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>gateway.yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>gateway.yaml
 </span></code></pre></div>
 <p>List the deployments running in <code>kgateway-system</code>:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>k<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-n<span class="w"> </span>kgateway-system
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-n<span class="w"> </span>kgateway-system
 </span></code></pre></div>
 <p>Applying the Gateway resource triggered the provisioning of the Envoy proxy deployment <code>my-gateway</code>.</p>
 <p>Also note the accompanying LoadBalancer-type service with external IP address:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>k<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>kgateway-system
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>kgateway-system
 </span></code></pre></div>
 <h2 id="configure-routing">Configure routing</h2>
 <h3 id="httpbin"><code>httpbin</code></h3>
@@ -1335,7 +1335,7 @@ We must then make implementation decisions and, from the generated output, deriv
 </ul>
 <h2 id="test-the-configuration">Test the configuration</h2>
 <p>When we begin testing our setup, the first thing we learn is that the routes did not attach to the gateway:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>k<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-route<span class="w"> </span>-o<span class="w"> </span>yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-route<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
 <p>Here is the output of the <code>status</code> section:</p>
 <div class="language-yaml highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">route status</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-24-1"> 1</a></span>
@@ -1479,11 +1479,11 @@ Application namespaces must be designated such that routes defined within them a
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span>label<span class="w"> </span>ns<span class="w"> </span>bookinfo<span class="w"> </span>self-serve-ingress<span class="o">=</span><span class="nb">true</span>
 </span></code></pre></div>
 <p>Check the routes again:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>k<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-route<span class="w"> </span>-o<span class="w"> </span>yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-route<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
 <p>This time the <em>Accepted</em> condition should be <em>True</em>.</p>
 <p>We can also check on the status of the gateway itself:  each listener should have one attached route:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>k<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>kgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-o<span class="w"> </span>yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>kgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
 <h3 id="send-test-requests">Send test requests</h3>
 <p>Send in some test requests through the new gateway.</p>
