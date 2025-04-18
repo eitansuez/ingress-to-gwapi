@@ -141,9 +141,9 @@ The tool does not perform intelligent analysis of the cluster, and will not take
 
 The other glaring difference between what the tool produced compared to what a human would, is the repetition of the `backendRefs` section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule with multiple `matches` and a single `backendRef`.
 
-Finally, the tool has no way of knowing (or does not provide a way to specify) what `gatewayClassName` to use for the translated resource, and so we much edit that value as well (to `kgateway`).
+Finally, the tool has no way of knowing (or does not provide a way to specify) what `gatewayClassName` to use for the translated resource, and so we must edit that value as well (to `kgateway`).
 
-In summary, using `ingress2gateway` is useful and insightful, but produces only a starting point for review, and evaluation.
+In summary, using `ingress2gateway` is useful and insightful, but produces only a starting point for review and evaluation.
 We must then make implementation decisions and, from the generated output, derive and craft the final Gateway API resource artifacts.
 
 We opt to provision a single gateway, with two separate HTTPRoute resources, one per application.
@@ -246,7 +246,7 @@ Note:
 
 - We place this HTTPRoute in `kgateway-system`; it is not a concern of the application development teams.
 - The routing rule binds to (applies to) the `http` listener only.
-- The rule uses the [RequestRedirect](https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter) filter to redirect the request to the https scheme, otherwise preserving the original URL.
+- The rule uses the [RequestRedirect](https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter) filter to redirect the request to the `https` scheme, otherwise preserving the original URL.
 
 ## Test the configuration
 
@@ -258,7 +258,7 @@ kubectl get httproute -n httpbin httpbin-route -o yaml
 
 Here is the output of the `status` section:
 
-```yaml linenums="1" title="route status" hl_lines="4-9"
+```yaml linenums="1" title="Route status" hl_lines="4-9"
 status:
   parents:
   - conditions:
@@ -283,7 +283,7 @@ status:
       sectionName: httpbin-https
 ```
 
-The condition _"Accepted=False"_ with the reason _"NotAllowedByListeners"_ stems from the fact that our gateway is not configured to allow routes from different namespaces to attach to it.
+The condition _"Accepted=False"_ with the reason _"NotAllowedByListeners"_ is due to the fact that the gateway is not configured to allow routes from different namespaces to attach to it.
 
 It stems from the decision we made to use a shared gateway and to place it in a separate namespace.
 Application namespaces must be designated such that routes defined within them are permitted to attach.
@@ -294,7 +294,7 @@ Here is a revised Gateway resource with explicit `allowedRoutes` rules for each 
 --8<-- "gateway-allows-routes.yaml"
 ```
 
-The convention is to label each namespace with `self-serve-ingress="true"` to allow both applications to define routes against the shared gateway:
+Above, we define a convention: to label each namespace with `self-serve-ingress="true"` to allow both applications to define routes against the shared gateway:
 
 ```shell
 kubectl label ns httpbin self-serve-ingress=true
@@ -312,7 +312,7 @@ Check the routes again:
 kubectl get httproute -n httpbin httpbin-route -o yaml
 ```
 
-This time the _Accepted_ condition should be _True_.
+This time the _Accepted_ condition is _True_.
 
 We can also check on the status of the gateway itself:  each listener should have one attached route:
 
@@ -370,7 +370,7 @@ You should notice that all traffic to the hostname now goes through the new gate
 Next, we can make the analogous DNS change for the `bookinfo` hostname, and observe that traffic begins to flow through the new gateway for `bookinfo` workloads too.
 
 This points to the fact that it is possible to migrate from ingress-nginx to kgateway in a piecemeal fashion:
-Teams can work at different pace and each migrate to the new gateway on their own schedule.
+teams can work at different pace and each migrate to the new gateway on their own schedule.
 
 When all teams have completed their migration, we can finally decommission the old gateway.
 
@@ -391,3 +391,5 @@ kgateway provides capabilities that will take your environment well beyond what 
 1. With ambient mesh, you can use kgateway as your waypoint, unlocking kgateway's capabilities for workloads running internally.
 1. Use kgateway as an egress gateway to control traffic exiting your environment.
 1. Use kgateway's AI capabilities to secure your LLM applications as they make requests to external LLM providers.
+
+For more information about these capabilities, visit the [kgateway.dev](https://kgateway.dev/) web site.
