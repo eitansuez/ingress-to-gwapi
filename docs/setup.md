@@ -22,7 +22,7 @@ The main requirement is that the environment support the assignment of an extern
     Here is an example command to provision a local cluster with [k3d](https://k3d.io):
 
     ```shell
-    k3d cluster create my-istio-cluster \
+    k3d cluster create my-k8s-cluster \
         --api-port 6443 \
         --k3s-arg "--disable=traefik@server:0" \
         --port 80:80@loadbalancer \
