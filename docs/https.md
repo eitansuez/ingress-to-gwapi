@@ -61,7 +61,7 @@ Below, note the addition of a `tls` section that references the secret you just 
 Apply the Ingress resource:
 
 ```shell
-k apply -f httpbin-https-ingress.yaml
+kubectl apply -f httpbin-https-ingress.yaml
 ```
 
 ### `bookinfo`
@@ -75,7 +75,7 @@ Similarly, for `bookinfo` we add a `tls` configuration section referencing its c
 Apply the resource:
 
 ```shell
-k apply -f bookinfo-https-ingress.yaml
+kubectl apply -f bookinfo-https-ingress.yaml
 ```
 
 ## Test it

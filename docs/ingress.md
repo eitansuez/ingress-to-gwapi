@@ -13,7 +13,7 @@ Review the configuration, which matches on a ficticious host name `httpbin.examp
 Apply it:
 
 ```shell
-k apply -f httpbin-ingress.yaml
+kubectl apply -f httpbin-ingress.yaml
 ```
 
 ### Test ingress
@@ -21,7 +21,7 @@ k apply -f httpbin-ingress.yaml
 The ingress-nginx controller has an associated LoadBalancer type service and hence, bearing an external IP address:
 
 ```shell
-k get svc -n ingress-nginx
+kubectl get svc -n ingress-nginx
 ```
 
 Capture the external IP address to the environment variable `GW_IP`:
@@ -51,7 +51,7 @@ The configuration for `bookinfo` is lengthier because it configures multiple spe
 Apply the configuration:
 
 ```shell
-k apply -f bookinfo-ingress.yaml
+kubectl apply -f bookinfo-ingress.yaml
 ```
 
 ### Test ingress

@@ -38,11 +38,11 @@ Deploy two distinct applications, each to its own namespace:
 [`httpbin`](httpbin.org) is a sample application useful for testing HTTP communications.
 
 ```shell
-k create ns httpbin
+kubectl create ns httpbin
 ```
 
 ```shell
-k apply -n httpbin -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
+kubectl apply -n httpbin -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
 ```
 
 ### `bookinfo`
@@ -50,23 +50,23 @@ k apply -n httpbin -f https://raw.githubusercontent.com/istio/istio/refs/heads/m
 [`bookinfo`](https://istio.io/latest/docs/examples/bookinfo/) is one of Istio's sample applications, consisting of four microservices.
 
 ```shell
-k create ns bookinfo
+kubectl create ns bookinfo
 ```
 
 ```shell
-k apply -n bookinfo -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -n bookinfo -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 
 Both sets of workloads should now be running in their respective namespaces:
 
 ```shell
-k get pod -n httpbin
+kubectl get pod -n httpbin
 ```
 
 And:
 
 ```shell
-k get pod -n bookinfo
+kubectl get pod -n bookinfo
 ```
 
 ## Install ingress-nginx
@@ -82,13 +82,13 @@ helm upgrade --install ingress-nginx ingress-nginx \
 Verify that the controller is running (it can take a minute before the pod reaches READY state):
 
 ```shell
-k get pod -n ingress-nginx
+kubectl get pod -n ingress-nginx
 ```
 
 Also note the presence of a default ingress class named `nginx` that can be used to associate any Ingress resources we create with this particular controller:
 
 ```shell
-k get ingressclass
+kubectl get ingressclass
 ```
 
 ## Next

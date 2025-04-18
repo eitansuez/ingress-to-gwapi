@@ -52,13 +52,13 @@ Let us use the instructions from the [quickstart](https://kgateway.dev/docs/quic
 We can verify the installation by listing deployments in the newly-created `kgateway-system` namespace:
 
 ```shell
-k get deploy -n kgateway-system
+kubectl get deploy -n kgateway-system
 ```
 
 We can also list GatewayClass resources, which are the Gateway API's equivalent to the IngressClass concept:
 
 ```shell
-k get gatewayclass
+kubectl get gatewayclass
 ```
 
 The output will show a GatewayClass named `kgateway` (and another one for provisioning waypoints, which is out of scope at the moment).
@@ -179,13 +179,13 @@ kubectl create secret tls bookinfo-cert -n kgateway-system \
 Apply the Gateway resource:
 
 ```shell
-k apply -f gateway.yaml
+kubectl apply -f gateway.yaml
 ```
 
 List the deployments running in `kgateway-system`:
 
 ```shell
-k get deploy -n kgateway-system
+kubectl get deploy -n kgateway-system
 ```
 
 Applying the Gateway resource triggered the provisioning of the Envoy proxy deployment `my-gateway`.
@@ -193,7 +193,7 @@ Applying the Gateway resource triggered the provisioning of the Envoy proxy depl
 Also note the accompanying LoadBalancer-type service with external IP address:
 
 ```shell
-k get svc -n kgateway-system
+kubectl get svc -n kgateway-system
 ```
 
 ## Configure routing
@@ -253,7 +253,7 @@ Note:
 When we begin testing our setup, the first thing we learn is that the routes did not attach to the gateway:
 
 ```shell
-k get httproute -n httpbin httpbin-route -o yaml
+kubectl get httproute -n httpbin httpbin-route -o yaml
 ```
 
 Here is the output of the `status` section:
@@ -309,7 +309,7 @@ kubectl label ns bookinfo self-serve-ingress=true
 Check the routes again:
 
 ```shell
-k get httproute -n httpbin httpbin-route -o yaml
+kubectl get httproute -n httpbin httpbin-route -o yaml
 ```
 
 This time the _Accepted_ condition should be _True_.
@@ -317,7 +317,7 @@ This time the _Accepted_ condition should be _True_.
 We can also check on the status of the gateway itself:  each listener should have one attached route:
 
 ```shell
-k get gtw -n kgateway-system my-gateway -o yaml
+kubectl get gtw -n kgateway-system my-gateway -o yaml
 ```
 
 ### Send test requests
