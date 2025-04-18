@@ -83,7 +83,8 @@ kubectl apply -f bookinfo-https-ingress.yaml
 Verify that you can now call `httpbin` over HTTPS:
 
 ```shell
-curl --insecure https://httpbin.example.com/get --resolve httpbin.example.com:443:$GW_IP | jq
+curl --insecure https://httpbin.example.com/get \
+  --resolve httpbin.example.com:443:$GW_IP | jq
 ```
 
 Note that we have to add the `--insecure` flag because we are using self-signed certificates.
@@ -91,13 +92,15 @@ Note that we have to add the `--insecure` flag because we are using self-signed 
 Likewise for `bookinfo`:
 
 ```shell
-curl -s --insecure https://bookinfo.example.com/productpage --resolve bookinfo.example.com:443:$GW_IP | grep title
+curl -s --insecure https://bookinfo.example.com/productpage \
+  --resolve bookinfo.example.com:443:$GW_IP | grep title
 ```
 
 Try to access `bookinfo` over HTTP:
 
 ```shell
-curl -v http://bookinfo.example.com/productpage --resolve bookinfo.example.com:80:$GW_IP
+curl -v http://bookinfo.example.com/productpage \
+  --resolve bookinfo.example.com:80:$GW_IP
 ```
 
 This should produce a [`308 Permanent Redirect`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/308) response.
@@ -105,7 +108,9 @@ This should produce a [`308 Permanent Redirect`](https://developer.mozilla.org/e
 You can instruct `curl` to follow redirects, and the response will be served over HTTPS:
 
 ```shell
-curl -s -L --insecure http://bookinfo.example.com/productpage --resolve bookinfo.example.com:80:$GW_IP --resolve bookinfo.example.com:443:$GW_IP | grep title
+curl -s -L --insecure http://bookinfo.example.com/productpage \
+  --resolve bookinfo.example.com:80:$GW_IP \
+  --resolve bookinfo.example.com:443:$GW_IP | grep title
 ```
 
 ## Where we stand

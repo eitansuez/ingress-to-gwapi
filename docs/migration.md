@@ -248,6 +248,12 @@ Note:
 - The routing rule binds to (applies to) the `http` listener only.
 - The rule uses the [RequestRedirect](https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter) filter to redirect the request to the `https` scheme, otherwise preserving the original URL.
 
+Apply the redirection rule:
+
+```shell
+kubectl apply -f http-redirect.yaml
+```
+
 ## Test the configuration
 
 When we begin testing our setup, the first thing we learn is that the routes did not attach to the gateway:
@@ -306,7 +312,13 @@ And:
 kubectl label ns bookinfo self-serve-ingress=true
 ```
 
-Check the routes again:
+Finally, apply the revised gateway resource:
+
+```shell
+kubectl apply -f gateway-allows-routes.yaml
+```
+
+Check the route status once more:
 
 ```shell
 kubectl get httproute -n httpbin httpbin-route -o yaml
@@ -379,8 +391,28 @@ When all teams have completed their migration, we can finally decommission the o
 Decommissioning the old gateway involves undoing the original ingress setup:
 
 1. Delete Ingress resources from each `bookinfo` and `httpbin` namespaces.
+
+    ```shell
+    kubectl delete ingress -n httpbin httpbin-ingress
+    ```
+
 1. Delete the secrets holding the server certificates from these namespaces too.
+
+    ```shell
+    kubectl delete ingress -n bookinfo bookinfo-ingress
+    ```
+
 1. Uninstall ingress-nginx.
+
+    ```shell
+    helm uninstall -n ingress-nginx ingress-nginx
+    ```
+
+    And:
+
+    ```shell
+    kubectl delete ns ingress-nginx
+    ```
 
 ## Summary
 

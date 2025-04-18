@@ -54,6 +54,8 @@ Apply the configuration:
 kubectl apply -f bookinfo-ingress.yaml
 ```
 
+ingress-nginx uses a shared gateway model:  multiple Ingress resources will program the same singular gateway.
+
 ### Test ingress
 
 We can test ingress to the `bookinfo` application in a fashion similar to what we did above:
