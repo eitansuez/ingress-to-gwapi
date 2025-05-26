@@ -1,10 +1,10 @@
 # Configure ingress
 
-To configure ingress for each application, apply [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) resources, one for each application, as show below.
+To configure ingress for each application, apply [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) resources, one for each application, as shown below.
 
 ## `httpbin`
 
-Review the configuration, which matches on a ficticious host name `httpbin.example.com` and routes matching requests to the `httpbin` backend service.
+Review the configuration, which matches on a fictitious host name `httpbin.example.com` and routes matching requests to the `httpbin` backend service.
 
 ```yaml linenums="1" title="httpbin-ingress.yaml"
 --8<-- "httpbin-ingress.yaml"
