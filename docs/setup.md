@@ -3,7 +3,7 @@
 ## Provision a cluster
 
 Feel free to provision a Kubernetes cluster any way you prefer.
-The main requirement is that the environment support the assignment of an external IP address to LoadBalancer-type services.
+The main requirement is that the environment supports the assignment of an external IP address to LoadBalancer-type services.
 
 === "GCP"
 

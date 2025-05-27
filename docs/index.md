@@ -23,10 +23,10 @@ Many vendors opt to use Envoy as their cloud-native gateway of choice, and so ev
 Many teams today still use the venerable Ingress API together with the ingress-nginx controller.
 Using the older implementation is becoming a sort of technical debt.
 
-The following pages contains instructions that will guide you through migrating an example project.
+The following pages contain instructions that will guide you through migrating an example project.
 You will start out using the ingress-nginx controller with the Ingress API, with the objective of migrating to the Gateway API.
 
-For the new controller, we will explore [kgateway](https://kgateway.dev/), an open-source project recently contributed to the CNCF by Solo.io, and which implements the Kubernetes Gateway API.
+For the new controller, we will explore [kgateway](https://kgateway.dev/), an open-source project recently contributed to the CNCF by Solo.io, and which implements the Kubernetes Gateway API using Envoy as the backing proxy.
 
 ## What next?
 
@@ -38,6 +38,6 @@ Your first goal will be to reach an initial state where:
 - The ingress-nginx controller installed
 - Ingress resources configuring the flow of ingress traffic to your APIs and applications
 
-You will next configure ingress with HTTPS to simulate a setup that is more aligned with real-world environment.
+You will next configure ingress with HTTPS to simulate a setup that is more aligned with a real-world environment.
 
 From there, we explore migration to the Kubernetes Gateway API.
