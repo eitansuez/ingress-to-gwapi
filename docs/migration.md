@@ -394,12 +394,14 @@ Decommissioning the old gateway involves undoing the original ingress setup:
 
     ```shell
     kubectl delete ingress -n httpbin httpbin-ingress
+    kubectl delete ingress -n bookinfo bookinfo-ingress
     ```
 
 1. Delete the secrets holding the server certificates from these namespaces too.
 
     ```shell
-    kubectl delete ingress -n bookinfo bookinfo-ingress
+    kubectl delete secret httpbin-cert -n httpbin
+    kubectl delete secret bookinfo-cert -n bookinfo
     ```
 
 1. Uninstall ingress-nginx.
