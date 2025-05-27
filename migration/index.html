@@ -1526,11 +1526,13 @@ teams can work at different pace and each migrate to the new gateway on their ow
 <li>
 <p>Delete Ingress resources from each <code>bookinfo</code> and <code>httpbin</code> namespaces.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-ingress
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>bookinfo-ingress
 </span></code></pre></div>
 </li>
 <li>
 <p>Delete the secrets holding the server certificates from these namespaces too.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>bookinfo-ingress
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>httpbin-cert<span class="w"> </span>-n<span class="w"> </span>httpbin
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>bookinfo-cert<span class="w"> </span>-n<span class="w"> </span>bookinfo
 </span></code></pre></div>
 </li>
 <li>
