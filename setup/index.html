@@ -624,7 +624,7 @@ The main requirement is that the environment supports the assignment of an exter
 <h2 id="deploy-two-distinct-workloads">Deploy two distinct workloads</h2>
 <p>Deploy two distinct applications, each to its own namespace:</p>
 <h3 id="httpbin"><code>httpbin</code></h3>
-<p><a href="httpbin.org"><code>httpbin</code></a> is a sample application useful for testing HTTP communications.</p>
+<p><a href="https://httpbin.org/"><code>httpbin</code></a> is a sample application useful for testing HTTP communications.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>httpbin
 </span></code></pre></div>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
