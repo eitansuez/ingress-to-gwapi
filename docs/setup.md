@@ -35,7 +35,7 @@ Deploy two distinct applications, each to its own namespace:
 
 ### `httpbin`
 
-[`httpbin`](httpbin.org) is a sample application useful for testing HTTP communications.
+[`httpbin`](https://httpbin.org/) is a sample application useful for testing HTTP communications.
 
 ```shell
 kubectl create ns httpbin
