@@ -1,10 +1,8 @@
----
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   annotations:
-    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
-  creationTimestamp: null
+    gateway.networking.k8s.io/generator: ingress2gateway-0.5.0
   name: nginx
   namespace: bookinfo
 spec:
@@ -29,8 +27,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   annotations:
-    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
-  creationTimestamp: null
+    gateway.networking.k8s.io/generator: ingress2gateway-0.5.0
   name: nginx
   namespace: httpbin
 spec:
@@ -55,8 +52,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
-  creationTimestamp: null
+    gateway.networking.k8s.io/generator: ingress2gateway-0.5.0
   name: bookinfo-ingress-bookinfo-example-com
   namespace: bookinfo
 spec:
@@ -107,8 +103,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   annotations:
-    gateway.networking.k8s.io/generator: ingress2gateway-0.4.0
-  creationTimestamp: null
+    gateway.networking.k8s.io/generator: ingress2gateway-0.5.0
   name: httpbin-ingress-httpbin-example-com
   namespace: httpbin
 spec:

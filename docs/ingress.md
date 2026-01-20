@@ -35,7 +35,7 @@ When making an HTTP request, we can use [curl's `--resolve` flag](https://everyt
 Test the following example call to [`httpbin`'s `/get`](https://httpbin.org/#/HTTP_Methods/get_get) endpoint:
 
 ```shell
-curl http://httpbin.example.com/get --resolve httpbin.example.com:80:$GW_IP | jq
+curl -s http://httpbin.example.com/get --resolve httpbin.example.com:80:$GW_IP | jq
 ```
 
 The response should present a json-formatted payload reflecting the properties of the request, including the url, headers, and HTTP method.
@@ -61,7 +61,7 @@ ingress-nginx uses a shared gateway model:  multiple Ingress resources will prog
 We can test ingress to the `bookinfo` application in a fashion similar to what we did above:
 
 ```shell
-curl http://bookinfo.example.com/productpage --resolve bookinfo.example.com:80:$GW_IP
+curl -s http://bookinfo.example.com/productpage --resolve bookinfo.example.com:80:$GW_IP
 ```
 
 The response payload for the `/productpage` endpoint is an HTML page.

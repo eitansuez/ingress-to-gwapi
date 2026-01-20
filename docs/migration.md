@@ -29,30 +29,34 @@ For this migration we will use [kgateway](https://kgateway.dev/), an open-source
 
 ### Install kgateway
 
-Let us use the instructions from the [quickstart](https://kgateway.dev/docs/quickstart/) to install kgateway.
+Let us use the instructions from the [quickstart](https://kgateway.dev/docs/agentgateway/latest/quickstart/) to install kgateway.
 
 1. Apply the Gateway API CRDs:
 
     ```shell
-    kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
+    kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml
     ```
 
 1. Install kgateway's own CRDs with Helm:
 
     ```shell
-    helm upgrade -i --create-namespace --namespace kgateway-system --version v2.0.0 kgateway-crds oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds
+    helm upgrade --install agentgateway-crds oci://ghcr.io/kgateway-dev/charts/agentgateway-crds \
+      --namespace agentgateway-system --create-namespace \
+      --version v2.2.0-main
     ```
 
 1. Install kgateway:
 
     ```shell
-    helm upgrade -i --namespace kgateway-system --version v2.0.0 kgateway oci://cr.kgateway.dev/kgateway-dev/charts/kgateway
+    helm upgrade --install agentgateway oci://ghcr.io/kgateway-dev/charts/agentgateway \
+      --namespace agentgateway-system \
+      --version v2.2.0-main
     ```
 
-We can verify the installation by listing deployments in the newly-created `kgateway-system` namespace:
+We can verify the installation by listing deployments in the newly-created `agentgateway-system` namespace:
 
 ```shell
-kubectl get deploy -n kgateway-system
+kubectl get deploy -n agentgateway-system
 ```
 
 We can also list GatewayClass resources, which are the Gateway API's equivalent to the IngressClass concept:
@@ -158,21 +162,21 @@ Study the following Gateway resource configuration:
 
 We make a number of design decisions:
 
-- Decide to provision a single gateway, and place it in the `kgateway-system` namespace, controlled (and accessible only) by cluster administrators.
+- Decide to provision a single gateway, and place it in the `agentgateway-system` namespace, controlled (and accessible only) by cluster administrators.
 - Define a port 80 listener.  We will later define a routing rule to redirect all HTTP requests to HTTPS.
 - Specify two listeners, one for each application (`httpbin` and `bookinfo`), matching on the corresponding hostname, each configured to terminate TLS, and each referencing its corresponding TLS certificate.
 
-These decisions have implications:  the secrets we created previously exist alongside each Ingress resource, in their corresponding application namespaces.  We must now place a copy of these secrets in `kgateway-system` to make it accessible to the new Gateway.
+These decisions have implications:  the secrets we created previously exist alongside each Ingress resource, in their corresponding application namespaces.  We must now place a copy of these secrets in `agentgateway-system` to make it accessible to the new Gateway.
 
 ```shell
-kubectl create secret tls httpbin-cert -n kgateway-system \
+kubectl create secret tls httpbin-cert -n agentgateway-system \
   --cert=httpbin.crt --key=httpbin.key
 ```
 
 And for `bookinfo`:
 
 ```shell
-kubectl create secret tls bookinfo-cert -n kgateway-system \
+kubectl create secret tls bookinfo-cert -n agentgateway-system \
   --cert=bookinfo.crt --key=bookinfo.key
 ```
 
@@ -182,10 +186,10 @@ Apply the Gateway resource:
 kubectl apply -f gateway.yaml
 ```
 
-List the deployments running in `kgateway-system`:
+List the deployments running in `agentgateway-system`:
 
 ```shell
-kubectl get deploy -n kgateway-system
+kubectl get deploy -n agentgateway-system
 ```
 
 Applying the Gateway resource triggered the provisioning of the Envoy proxy deployment `my-gateway`.
@@ -193,7 +197,7 @@ Applying the Gateway resource triggered the provisioning of the Envoy proxy depl
 Also note the accompanying LoadBalancer-type service with external IP address:
 
 ```shell
-kubectl get svc -n kgateway-system
+kubectl get svc -n agentgateway-system
 ```
 
 ## Configure routing
@@ -208,7 +212,7 @@ Study the below HTTPRoute for `httpbin`:
 
 The above configuration is essentially what `ingress2gateway` produced, but with the following differences:
 
-- Bind to the gateway `my-gateway`, provisioned in the `kgateway-system` namespace
+- Bind to the gateway `my-gateway`, provisioned in the `agentgateway-system` namespace
 - Explicitly attach the route to the `httpbin-https` listener
 - Remove redundant `matches` and `hostnames` clauses.
 
@@ -226,7 +230,7 @@ Study the below HTTPRoute for `bookinfo`:
 --8<-- "bookinfo-route.yaml"
 ```
 
-Aside from binding to the `bookinfo-https` listener on the gateway in `kgateway-system`, the big difference above, compared to what the tool produced, is the elimination of the repeated or duplicate `backendRef` section:  we can specify a single routing rule with multiple path matches, all routing to the same, single `productpage` backend reference.
+Aside from binding to the `bookinfo-https` listener on the gateway in `agentgateway-system`, the big difference above, compared to what the tool produced, is the elimination of the repeated or duplicate `backendRef` section:  we can specify a single routing rule with multiple path matches, all routing to the same, single `productpage` backend reference.
 
 Apply the route:
 
@@ -244,7 +248,7 @@ Study the below routing rule:
 
 Note:
 
-- We place this HTTPRoute in `kgateway-system`; it is not a concern of the application development teams.
+- We place this HTTPRoute in `agentgateway-system`; it is not a concern of the application development teams.
 - The routing rule binds to (applies to) the `http` listener only.
 - The rule uses the [RequestRedirect](https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter) filter to redirect the request to the `https` scheme, otherwise preserving the original URL.
 
@@ -285,7 +289,7 @@ status:
       group: gateway.networking.k8s.io
       kind: Gateway
       name: my-gateway
-      namespace: kgateway-system
+      namespace: agentgateway-system
       sectionName: httpbin-https
 ```
 
@@ -329,7 +333,7 @@ This time the _Accepted_ condition is _True_.
 We can also check on the status of the gateway itself:  each listener should have one attached route:
 
 ```shell
-kubectl get gtw -n kgateway-system my-gateway -o yaml
+kubectl get gtw -n agentgateway-system my-gateway -o yaml
 ```
 
 ### Send test requests
@@ -339,13 +343,13 @@ Send in some test requests through the new gateway.
 First, capture the new gateway IP address:
 
 ```shell
-export GW_IP=$(kubectl get gtw -n kgateway-system my-gateway -ojsonpath='{.status.addresses[0].value}')
+export GW_IP=$(kubectl get gtw -n agentgateway-system my-gateway -ojsonpath='{.status.addresses[0].value}')
 ```
 
 Call `httpbin`:
 
 ```shell
-curl --insecure https://httpbin.example.com/headers --resolve httpbin.example.com:443:$GW_IP | jq
+curl -s --insecure https://httpbin.example.com/headers --resolve httpbin.example.com:443:$GW_IP | jq
 ```
 
 Verify that redirects work correctly by making a call over HTTP:
@@ -357,7 +361,7 @@ curl -v http://httpbin.example.com/headers --resolve httpbin.example.com:80:$GW_
 Call `bookinfo`:
 
 ```shell
-curl --insecure https://bookinfo.example.com/productpage --resolve bookinfo.example.com:443:$GW_IP | grep title
+curl -s --insecure https://bookinfo.example.com/productpage --resolve bookinfo.example.com:443:$GW_IP | grep title
 ```
 
 Verify that redirects work correctly for `bookinfo` as well:
