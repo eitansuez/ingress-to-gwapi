@@ -83,7 +83,7 @@ kubectl apply -f bookinfo-https-ingress.yaml
 Verify that you can now call `httpbin` over HTTPS:
 
 ```shell
-curl --insecure https://httpbin.example.com/get \
+curl -s --insecure https://httpbin.example.com/get \
   --resolve httpbin.example.com:443:$GW_IP | jq
 ```
 
