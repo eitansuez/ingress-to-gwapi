@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://eitansuez.github.io/ingress-to-gwapi/migration/">
+        <link rel="canonical" href="https://eitansuez.github.io/ingress-to-gwapi/migrate/">
       
       
         <link rel="prev" href="../https/">
@@ -407,15 +407,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gateway-api-compatible-controller" class="md-nav__link">
+  <a href="#gateway-api-conformant-controller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gateway API compatible controller
+        Gateway API conformant controller
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Gateway API compatible controller">
+    <nav class="md-nav" aria-label="Gateway API conformant controller">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -470,6 +470,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Review and vet the generated configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -641,15 +658,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gateway-api-compatible-controller" class="md-nav__link">
+  <a href="#gateway-api-conformant-controller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gateway API compatible controller
+        Gateway API conformant controller
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Gateway API compatible controller">
+    <nav class="md-nav" aria-label="Gateway API conformant controller">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -704,6 +721,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Review and vet the generated configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -869,7 +903,7 @@ In other words, in large enterprise environments, we need to accommodate teams t
 <p>This last point affords us the flexibility to use either shared gateways or dedicated ones for specific applications.
 Certain applications require a higher degree of isolation.  This can be imposed by regulatory or other requirements, where traffic flowing to the target application cannot pass through a shared component, perhaps for security reasons, or to avoid other types of issues that stem from "noisy neighbors."
 On the other hand, for applications that do not require it, it's simpler and more cost effective to use a single shared gateway.</p>
-<h2 id="gateway-api-compatible-controller">Gateway API compatible controller</h2>
+<h2 id="gateway-api-conformant-controller">Gateway API conformant controller</h2>
 <p>The Gateway API documentation <a href="https://gateway-api.sigs.k8s.io/implementations/">lists</a> implementations that conform to it.
 For this migration we will use <a href="https://agentgateway.dev/">agentgateway</a>, an open-source project recently contributed to the CNCF.</p>
 <h3 id="install-agentgateway">Install agentgateway</h3>
@@ -952,11 +986,10 @@ Finally, LLMs tend to produce different results each time they are run, they are
 </ul>
 <h2 id="review-and-vet-the-generated-configurations">Review and vet the generated configurations</h2>
 <p>The biggest difference by far between Ingress and Gateway API resources is that a single Ingress configuration maps to a pair of resources:  Gateway and an HTTPRoute.</p>
-<p>Let us study the output from <code>ingress2gateway</code>:</p>
+<p>Run the migration tool:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx<span class="w"> </span>--all-namespaces
 </span></code></pre></div>
-<p>Like most tools, this one appears to perform direct translations:  for every Ingress resource, it produces a Gateway and an HTTPRoute.
-The tool does not perform intelligent analysis of the cluster, and will not take into account that there are two distinct applications where a plausible configuration would be to provision a single, shared gateway.</p>
+<p>Study the output:</p>
 <div class="language-yaml highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">generated-config.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">  1</a></span>
 <span class="normal"><a href="#__codelineno-11-2">  2</a></span>
 <span class="normal"><a href="#__codelineno-11-3">  3</a></span>
@@ -1203,8 +1236,12 @@ The tool does not perform intelligent analysis of the cluster, and will not take
 </span><span id="__span-11-122"><a id="__codelineno-11-122" name="__codelineno-11-122"></a><span class="nt">status</span><span class="p">:</span>
 </span><span id="__span-11-123"><a id="__codelineno-11-123" name="__codelineno-11-123"></a><span class="w">  </span><span class="nt">parents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </span></code></pre></div></td></tr></table></div>
-<p>The other glaring difference between what the tool produced compared to what a human would, is the repetition of the <code>backendRefs</code> section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule with multiple <code>matches</code> and a single <code>backendRef</code>.</p>
-<p>Finally, the tool has no way of knowing (or does not provide a way to specify) what <code>gatewayClassName</code> to use for the translated resource, and so we must edit that value as well (to <code>agentgateway</code>).</p>
+<h3 id="analysis">Analysis</h3>
+<p>Like most tools, <code>ingress2gateway</code> appears to perform direct translations:  for every Ingress resource, it produces a Gateway and an HTTPRoute.
+The tool does not perform intelligent analysis of the cluster, and will not take into account that there are two distinct applications where a plausible configuration would be to provision a single, shared gateway.</p>
+<p>The other glaring difference between what the tool produced compared to what a human would can be seen in the generated HTTPRoute for the <code>bookinfo</code> application:
+the repetition of the <code>backendRefs</code> section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule consisting of multiple <code>matches</code> clauses and a single <code>backendRef</code>.</p>
+<p>Finally, the tool does not know what <code>gatewayClassName</code> to use for the translated resource, and so we must edit that value as well (to <code>agentgateway</code>).</p>
 <p>In summary, using <code>ingress2gateway</code> is useful and insightful, but produces only a starting point for review and evaluation.
 We must then make implementation decisions and, from the generated output, derive and craft the final Gateway API resource artifacts.</p>
 <p>We opt to provision a single gateway, with two separate HTTPRoute resources, one per application.</p>
@@ -1602,7 +1639,7 @@ Application namespaces must be designated such that routes defined within them a
 <p>Also, check the status of the gateway itself:  each listener should have one attached route:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>agentgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
-<p>Here is a more targeted command using a jsonpath query:</p>
+<p>Here is a more targeted command that uses a jsonpath query to confirm that we have one attached route per listener:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>agentgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-ojsonpath<span class="o">=</span><span class="s1">&#39;{.status.listeners[*].attachedRoutes}&#39;</span>
 </span></code></pre></div>
 <h3 id="send-test-requests">Send test requests</h3>
@@ -1667,7 +1704,7 @@ agentgateway provides capabilities that will take your environment well beyond w
 <li>Use agentgateway as an egress gateway to control traffic exiting your environment.</li>
 <li>Use agentgateway's AI capabilities to proxy and secure agentic workloads:  agents, MCP servers, LLMs, etc..</li>
 </ol>
-<p>For more information about these capabilities, visit the <a href="https://agentgateway.dev/">agentgateway.dev</a> web site.</p>
+<p>For more information about these capabilities, visit <a href="https://agentgateway.dev/">agentgateway.dev</a>.</p>
 
 
 
