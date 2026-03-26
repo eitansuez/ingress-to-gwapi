@@ -12,7 +12,7 @@ In other words, in large enterprise environments, we need to accommodate teams t
 
 ## The Gateway API
 
-The Kubernetes Gateway API improves upon the Ingress model in a number of ways:
+The [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) improves upon the Ingress model in a number of ways:
 
 - Routing and Gateway-specific concerns are separate concerns, and are configured through distinct resources.  Routes attach to Gateways.
 - Personas are taken into account: platform administrators configure gateways while applications teams self-service routing rules for their apps.
@@ -25,47 +25,48 @@ On the other hand, for applications that do not require it, it's simpler and mor
 ## Gateway API compatible controller
 
 The Gateway API documentation [lists](https://gateway-api.sigs.k8s.io/implementations/) implementations that conform to it.
-For this migration we will use [kgateway](https://kgateway.dev/), an open-source project recently contributed to the CNCF.
+For this migration we will use [agentgateway](https://agentgateway.dev/), an open-source project recently contributed to the CNCF.
 
-### Install kgateway
+### Install agentgateway
 
-Let us use the instructions from the [quickstart](https://kgateway.dev/docs/agentgateway/latest/quickstart/) to install kgateway.
+Use the instructions from the [docs](https://agentgateway.dev/docs/kubernetes/latest/install/helm/) to install agentgateway on Kubernetes.
 
 1. Apply the Gateway API CRDs:
 
     ```shell
-    kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml
+    kubectl apply --server-side \
+      -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.0/standard-install.yaml
     ```
 
-1. Install kgateway's own CRDs with Helm:
+1. Install agentgateway's own CRDs with Helm:
 
     ```shell
-    helm upgrade --install agentgateway-crds oci://ghcr.io/kgateway-dev/charts/agentgateway-crds \
+    helm upgrade --install agentgateway-crds oci://cr.agentgateway.dev/charts/agentgateway-crds \
       --namespace agentgateway-system --create-namespace \
-      --version v2.2.0-main
+      --version v1.0.0 
     ```
 
-1. Install kgateway:
+1. Install agentgateway:
 
     ```shell
-    helm upgrade --install agentgateway oci://ghcr.io/kgateway-dev/charts/agentgateway \
+    helm upgrade --install agentgateway oci://cr.agentgateway.dev/charts/agentgateway \
       --namespace agentgateway-system \
-      --version v2.2.0-main
+      --version v1.0.0
     ```
 
-We can verify the installation by listing deployments in the newly-created `agentgateway-system` namespace:
+Verify the installation by listing deployments in the newly-created `agentgateway-system` namespace:
 
 ```shell
 kubectl get deploy -n agentgateway-system
 ```
 
-We can also list GatewayClass resources, which are the Gateway API's equivalent to the IngressClass concept:
+List GatewayClass-type resources, which are the Gateway API's equivalent to the IngressClass concept:
 
 ```shell
 kubectl get gatewayclass
 ```
 
-The output will show a GatewayClass named `kgateway` (and another one for provisioning waypoints, which is out of scope at the moment).
+The output will show a GatewayClass named `agentgateway`.
 
 We now have a running control plane.
 
@@ -84,7 +85,8 @@ For large numbers of files, we can try to use a tool in combination with human r
 
 These days we have a third option:  leveraging an LLM to translate our configurations.
 This can be a viable option, but also comes with caveats:  it may be a security risk to divulge internal configurations if using an external provider.
-Also LLMs are not impervious to making mistakes, and so their output needs to be reviewed and sometimes corrected.
+Also LLMs are not impervious to making mistakes, and so their output needs to be reviewed and often corrected.
+Finally, LLMs tend to produce different results each time they are run, they are non-deterministic.  Agents skills can be used to attempt to overcome such issues.
 
 ### Explore `ingress2gateway`
 
@@ -96,35 +98,37 @@ The tool provides a number of options to control scope and source of configurati
 
 Here are a number of alternative invocations of the tool to generate configuration:
 
-Look for Ingress resources in the entire cluster:
+- Look for Ingress resources in the entire cluster:
 
-```shell
-ingress2gateway print --providers ingress-nginx --all-namespaces
-```
+    ```shell
+    ingress2gateway print --providers ingress-nginx --all-namespaces
+    ```
 
-Scope the search to the `httpbin` namespace:
+- Scope the search to the `httpbin` namespace:
 
-```shell
-ingress2gateway print --namespace httpbin --providers ingress-nginx
-```
+    ```shell
+    ingress2gateway print --namespace httpbin --providers ingress-nginx
+    ```
 
-Or, for `bookinfo`:
+- Or, for `bookinfo`:
 
-```shell
-ingress2gateway print --namespace bookinfo --providers ingress-nginx
-```
+    ```shell
+    ingress2gateway print --namespace bookinfo --providers ingress-nginx
+    ```
 
-Use an input file and translate that:
+- Use an input file and translate that:
 
-```shell
-ingress2gateway print --input-file ./httpbin-https-ingress.yaml --namespace httpbin --providers ingress-nginx
-```
+    ```shell
+    ingress2gateway print --input-file ./httpbin-https-ingress.yaml \
+      --namespace httpbin --providers ingress-nginx
+    ```
 
-Or, for `bookinfo`:
+- Or, for `bookinfo`:
 
-```shell
-ingress2gateway print --input-file ./bookinfo-https-ingress.yaml --namespace bookinfo --providers ingress-nginx
-```
+    ```shell
+    ingress2gateway print --input-file ./bookinfo-https-ingress.yaml \
+      --namespace bookinfo --providers ingress-nginx
+    ```
 
 ## Review and vet the generated configurations
 
@@ -145,7 +149,7 @@ The tool does not perform intelligent analysis of the cluster, and will not take
 
 The other glaring difference between what the tool produced compared to what a human would, is the repetition of the `backendRefs` section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule with multiple `matches` and a single `backendRef`.
 
-Finally, the tool has no way of knowing (or does not provide a way to specify) what `gatewayClassName` to use for the translated resource, and so we must edit that value as well (to `kgateway`).
+Finally, the tool has no way of knowing (or does not provide a way to specify) what `gatewayClassName` to use for the translated resource, and so we must edit that value as well (to `agentgateway`).
 
 In summary, using `ingress2gateway` is useful and insightful, but produces only a starting point for review and evaluation.
 We must then make implementation decisions and, from the generated output, derive and craft the final Gateway API resource artifacts.
@@ -192,7 +196,7 @@ List the deployments running in `agentgateway-system`:
 kubectl get deploy -n agentgateway-system
 ```
 
-Applying the Gateway resource triggered the provisioning of the Envoy proxy deployment `my-gateway`.
+_Applying the Gateway resource triggered the provisioning of the Envoy proxy deployment `my-gateway`._
 
 Also note the accompanying LoadBalancer-type service with external IP address:
 
@@ -272,19 +276,19 @@ Here is the output of the `status` section:
 status:
   parents:
   - conditions:
-    - lastTransitionTime: "2025-04-16T22:15:18Z"
-      message: ""
+    - lastTransitionTime: "2026-03-26T14:10:41Z"
+      message: Parent listener not usable or not permitted
       observedGeneration: 1
       reason: NotAllowedByListeners
       status: "False"
       type: Accepted
-    - lastTransitionTime: "2025-04-16T22:15:18Z"
+    - lastTransitionTime: "2026-03-26T14:10:41Z"
       message: ""
       observedGeneration: 1
       reason: ResolvedRefs
       status: "True"
       type: ResolvedRefs
-    controllerName: kgateway.dev/kgateway
+    controllerName: agentgateway.dev/agentgateway
     parentRef:
       group: gateway.networking.k8s.io
       kind: Gateway
@@ -293,9 +297,9 @@ status:
       sectionName: httpbin-https
 ```
 
-The condition _"Accepted=False"_ with the reason _"NotAllowedByListeners"_ is due to the fact that the gateway is not configured to allow routes from different namespaces to attach to it.
-
-It stems from the decision we made to use a shared gateway and to place it in a separate namespace.
+The condition _"Accepted=False"_ with the reason _"NotAllowedByListeners"_ is a permission error.
+The gateway is not configured to allow the attachment of routes outside its namespace.
+It stems from the decision to use a shared gateway and to place it in a separate namespace.
 Application namespaces must be designated such that routes defined within them are permitted to attach.
 
 Here is a revised Gateway resource with explicit `allowedRoutes` rules for each listener:
@@ -304,7 +308,9 @@ Here is a revised Gateway resource with explicit `allowedRoutes` rules for each 
 --8<-- "gateway-allows-routes.yaml"
 ```
 
-Above, we define a convention: to label each namespace with `self-serve-ingress="true"` to allow both applications to define routes against the shared gateway:
+Above, we define a convention: a namespace labeled with `self-serve-ingress="true"` is allowed to define routes against the shared gateway.
+
+Apply the label to each `httpbin` and `bookinfo` namespaces:
 
 ```shell
 kubectl label ns httpbin self-serve-ingress=true
@@ -328,12 +334,18 @@ Check the route status once more:
 kubectl get httproute -n httpbin httpbin-route -o yaml
 ```
 
-This time the _Accepted_ condition is _True_.
+Confirm that, this time, the _Accepted_ condition is _True_.
 
-We can also check on the status of the gateway itself:  each listener should have one attached route:
+Also, check the status of the gateway itself:  each listener should have one attached route:
 
 ```shell
 kubectl get gtw -n agentgateway-system my-gateway -o yaml
+```
+
+Here is a more targeted command using a jsonpath query:
+
+```shell
+kubectl get gtw -n agentgateway-system my-gateway -ojsonpath='{.status.listeners[*].attachedRoutes}'
 ```
 
 ### Send test requests
@@ -375,22 +387,22 @@ Note the HTTP 301 (Moved permanently) response.
 ## Switching over
 
 We have two gateways, and both are configured with equivalent rules, to route requests to `httpbin` and to `bookinfo`.
-One gateway is controlled by the ingress-nginx controller and uses the nginx proxy, while the other is controlled by kgateway and uses the Envoy proxy.
+One gateway is controlled by the ingress-nginx controller and uses the nginx proxy, while the other is controlled by the agentgateway controller and uses the agentgateway proxy.
 Each has its own distinct public IP address.
 
-Switching from ingress-nginx to kgateway is a matter of updating the DNS configuration for each host name:  alter the A record for `httpbin.example.com` to point to the new gateway IP address.
+Switching from ingress-nginx to agentgateway is a matter of updating the DNS configuration for each host name:  alter the A record for `httpbin.example.com` to point to the new gateway IP address.
 
 Monitor traffic through both gateways.
 You should notice that all traffic to the hostname now goes through the new gateway, while the old gateway will cease to receive traffic.
 
 Next, we can make the analogous DNS change for the `bookinfo` hostname, and observe that traffic begins to flow through the new gateway for `bookinfo` workloads too.
 
-This points to the fact that it is possible to migrate from ingress-nginx to kgateway in a piecemeal fashion:
-teams can work at different pace and each migrate to the new gateway on their own schedule.
+This points to the fact that it is possible to migrate from ingress-nginx to agentgateway in a piecemeal fashion:
+teams can work at a different pace, and each migrate to the new gateway on their own schedule.
 
 When all teams have completed their migration, we can finally decommission the old gateway.
 
-## Decomission ingress-nginx
+## Decommission ingress-nginx
 
 Decommissioning the old gateway involves undoing the original ingress setup:
 
@@ -423,11 +435,11 @@ Decommissioning the old gateway involves undoing the original ingress setup:
 ## Summary
 
 This migration isn't the end of the road.
-kgateway provides capabilities that will take your environment well beyond what the original system could do:
+agentgateway provides capabilities that will take your environment well beyond what the original system could do:
 
-1. Integrate kgateway with your Istio service mesh to gain encrypted communication with mutual TLS from the gateway to your mesh backend workloads.
-1. With ambient mesh, you can use kgateway as your waypoint, unlocking kgateway's capabilities for workloads running internally.
-1. Use kgateway as an egress gateway to control traffic exiting your environment.
-1. Use kgateway's AI capabilities to secure your LLM applications as they make requests to external LLM providers.
+1. Integrate agentgateway with your Istio service mesh to gain encrypted communication with mutual TLS from the gateway to your mesh backend workloads.
+1. With ambient mesh, you can use agentgateway as your waypoint, unlocking agentgateway's capabilities for workloads running internally.
+1. Use agentgateway as an egress gateway to control traffic exiting your environment.
+1. Use agentgateway's AI capabilities to proxy and secure agentic workloads:  agents, MCP servers, LLMs, etc..
 
-For more information about these capabilities, visit the [kgateway.dev](https://kgateway.dev/) web site.
+For more information about these capabilities, visit the [agentgateway.dev](https://agentgateway.dev/) web site.
