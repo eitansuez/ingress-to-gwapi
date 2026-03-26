@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -419,10 +419,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#install-kgateway" class="md-nav__link">
+  <a href="#install-agentgateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install kgateway
+        Install agentgateway
       
     </span>
   </a>
@@ -574,10 +574,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decomission-ingress-nginx" class="md-nav__link">
+  <a href="#decommission-ingress-nginx" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decomission ingress-nginx
+        Decommission ingress-nginx
       
     </span>
   </a>
@@ -653,10 +653,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#install-kgateway" class="md-nav__link">
+  <a href="#install-agentgateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install kgateway
+        Install agentgateway
       
     </span>
   </a>
@@ -808,10 +808,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decomission-ingress-nginx" class="md-nav__link">
+  <a href="#decommission-ingress-nginx" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decomission ingress-nginx
+        Decommission ingress-nginx
       
     </span>
   </a>
@@ -860,7 +860,7 @@
 <p>In addition, it is desirable to have the flexibility to transition one host name at a time.
 In other words, in large enterprise environments, we need to accommodate teams transitioning to the new API at their own pace.</p>
 <h2 id="the-gateway-api">The Gateway API</h2>
-<p>The Kubernetes Gateway API improves upon the Ingress model in a number of ways:</p>
+<p>The <a href="https://gateway-api.sigs.k8s.io/">Kubernetes Gateway API</a> improves upon the Ingress model in a number of ways:</p>
 <ul>
 <li>Routing and Gateway-specific concerns are separate concerns, and are configured through distinct resources.  Routes attach to Gateways.</li>
 <li>Personas are taken into account: platform administrators configure gateways while applications teams self-service routing rules for their apps.</li>
@@ -871,37 +871,38 @@ Certain applications require a higher degree of isolation.  This can be imposed 
 On the other hand, for applications that do not require it, it's simpler and more cost effective to use a single shared gateway.</p>
 <h2 id="gateway-api-compatible-controller">Gateway API compatible controller</h2>
 <p>The Gateway API documentation <a href="https://gateway-api.sigs.k8s.io/implementations/">lists</a> implementations that conform to it.
-For this migration we will use <a href="https://kgateway.dev/">kgateway</a>, an open-source project recently contributed to the CNCF.</p>
-<h3 id="install-kgateway">Install kgateway</h3>
-<p>Let us use the instructions from the <a href="https://kgateway.dev/docs/agentgateway/latest/quickstart/">quickstart</a> to install kgateway.</p>
+For this migration we will use <a href="https://agentgateway.dev/">agentgateway</a>, an open-source project recently contributed to the CNCF.</p>
+<h3 id="install-agentgateway">Install agentgateway</h3>
+<p>Use the instructions from the <a href="https://agentgateway.dev/docs/kubernetes/latest/install/helm/">docs</a> to install agentgateway on Kubernetes.</p>
 <ol>
 <li>
 <p>Apply the Gateway API CRDs:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>--server-side<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-f<span class="w"> </span>https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.0/standard-install.yaml
 </span></code></pre></div>
 </li>
 <li>
-<p>Install kgateway's own CRDs with Helm:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>agentgateway-crds<span class="w"> </span>oci://ghcr.io/kgateway-dev/charts/agentgateway-crds<span class="w"> </span><span class="se">\</span>
+<p>Install agentgateway's own CRDs with Helm:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>agentgateway-crds<span class="w"> </span>oci://cr.agentgateway.dev/charts/agentgateway-crds<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--namespace<span class="w"> </span>agentgateway-system<span class="w"> </span>--create-namespace<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--version<span class="w"> </span>v2.2.0-main
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--version<span class="w"> </span>v1.0.0<span class="w"> </span>
 </span></code></pre></div>
 </li>
 <li>
-<p>Install kgateway:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>agentgateway<span class="w"> </span>oci://ghcr.io/kgateway-dev/charts/agentgateway<span class="w"> </span><span class="se">\</span>
+<p>Install agentgateway:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>agentgateway<span class="w"> </span>oci://cr.agentgateway.dev/charts/agentgateway<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--namespace<span class="w"> </span>agentgateway-system<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--version<span class="w"> </span>v2.2.0-main
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--version<span class="w"> </span>v1.0.0
 </span></code></pre></div>
 </li>
 </ol>
-<p>We can verify the installation by listing deployments in the newly-created <code>agentgateway-system</code> namespace:</p>
+<p>Verify the installation by listing deployments in the newly-created <code>agentgateway-system</code> namespace:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-n<span class="w"> </span>agentgateway-system
 </span></code></pre></div>
-<p>We can also list GatewayClass resources, which are the Gateway API's equivalent to the IngressClass concept:</p>
+<p>List GatewayClass-type resources, which are the Gateway API's equivalent to the IngressClass concept:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gatewayclass
 </span></code></pre></div>
-<p>The output will show a GatewayClass named <code>kgateway</code> (and another one for provisioning waypoints, which is out of scope at the moment).</p>
+<p>The output will show a GatewayClass named <code>agentgateway</code>.</p>
 <p>We now have a running control plane.</p>
 <p>The next step is to provision a gateway; for that we use the Gateway resource.</p>
 <h2 id="translate-the-ingress-configurations">Translate the Ingress configurations</h2>
@@ -913,27 +914,42 @@ On the other hand, tools are often incomplete, they don't always implement a spe
 For large numbers of files, we can try to use a tool in combination with human review and testing to ensure correctness.</p>
 <p>These days we have a third option:  leveraging an LLM to translate our configurations.
 This can be a viable option, but also comes with caveats:  it may be a security risk to divulge internal configurations if using an external provider.
-Also LLMs are not impervious to making mistakes, and so their output needs to be reviewed and sometimes corrected.</p>
+Also LLMs are not impervious to making mistakes, and so their output needs to be reviewed and often corrected.
+Finally, LLMs tend to produce different results each time they are run, they are non-deterministic.  Agents skills can be used to attempt to overcome such issues.</p>
 <h3 id="explore-ingress2gateway">Explore <code>ingress2gateway</code></h3>
 <p>The Kubernetes community provides a tool named <a href="https://kubernetes.io/blog/2023/10/25/introducing-ingress2gateway/">ingress2gateway</a> designed specifically for this purpose.</p>
 <p>Follow the instructions to install the tool's CLI on your machine.</p>
 <p>The tool provides a number of options to control scope and source of configuration:  we can have it inspect a running cluster and look at Ingress objects applied directly to the cluster, or we can point it at an input file on disk and have it translate that.  We can also scope the search for Ingress resources to a namespace, or have it look at all namespaces.</p>
 <p>Here are a number of alternative invocations of the tool to generate configuration:</p>
+<ul>
+<li>
 <p>Look for Ingress resources in the entire cluster:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx<span class="w"> </span>--all-namespaces
 </span></code></pre></div>
+</li>
+<li>
 <p>Scope the search to the <code>httpbin</code> namespace:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--namespace<span class="w"> </span>httpbin<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
+</li>
+<li>
 <p>Or, for <code>bookinfo</code>:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--namespace<span class="w"> </span>bookinfo<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
+</li>
+<li>
 <p>Use an input file and translate that:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--input-file<span class="w"> </span>./httpbin-https-ingress.yaml<span class="w"> </span>--namespace<span class="w"> </span>httpbin<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--input-file<span class="w"> </span>./httpbin-https-ingress.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--namespace<span class="w"> </span>httpbin<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
+</li>
+<li>
 <p>Or, for <code>bookinfo</code>:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--input-file<span class="w"> </span>./bookinfo-https-ingress.yaml<span class="w"> </span>--namespace<span class="w"> </span>bookinfo<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ingress2gateway<span class="w"> </span>print<span class="w"> </span>--input-file<span class="w"> </span>./bookinfo-https-ingress.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--namespace<span class="w"> </span>bookinfo<span class="w"> </span>--providers<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
+</li>
+</ul>
 <h2 id="review-and-vet-the-generated-configurations">Review and vet the generated configurations</h2>
 <p>The biggest difference by far between Ingress and Gateway API resources is that a single Ingress configuration maps to a pair of resources:  Gateway and an HTTPRoute.</p>
 <p>Let us study the output from <code>ingress2gateway</code>:</p>
@@ -1188,7 +1204,7 @@ The tool does not perform intelligent analysis of the cluster, and will not take
 </span><span id="__span-11-123"><a id="__codelineno-11-123" name="__codelineno-11-123"></a><span class="w">  </span><span class="nt">parents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </span></code></pre></div></td></tr></table></div>
 <p>The other glaring difference between what the tool produced compared to what a human would, is the repetition of the <code>backendRefs</code> section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule with multiple <code>matches</code> and a single <code>backendRef</code>.</p>
-<p>Finally, the tool has no way of knowing (or does not provide a way to specify) what <code>gatewayClassName</code> to use for the translated resource, and so we must edit that value as well (to <code>kgateway</code>).</p>
+<p>Finally, the tool has no way of knowing (or does not provide a way to specify) what <code>gatewayClassName</code> to use for the translated resource, and so we must edit that value as well (to <code>agentgateway</code>).</p>
 <p>In summary, using <code>ingress2gateway</code> is useful and insightful, but produces only a starting point for review and evaluation.
 We must then make implementation decisions and, from the generated output, derive and craft the final Gateway API resource artifacts.</p>
 <p>We opt to provision a single gateway, with two separate HTTPRoute resources, one per application.</p>
@@ -1270,7 +1286,7 @@ We must then make implementation decisions and, from the generated output, deriv
 <p>List the deployments running in <code>agentgateway-system</code>:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-n<span class="w"> </span>agentgateway-system
 </span></code></pre></div>
-<p>Applying the Gateway resource triggered the provisioning of the Envoy proxy deployment <code>my-gateway</code>.</p>
+<p><em>Applying the Gateway resource triggered the provisioning of the Envoy proxy deployment <code>my-gateway</code>.</em></p>
 <p>Also note the accompanying LoadBalancer-type service with external IP address:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>agentgateway-system
 </span></code></pre></div>
@@ -1456,19 +1472,19 @@ We must then make implementation decisions and, from the generated output, deriv
 <span class="normal"><a href="#__codelineno-25-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="nt">status</span><span class="p">:</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2"></a><span class="w">  </span><span class="nt">parents</span><span class="p">:</span>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">conditions</span><span class="p">:</span>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="hll"><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">lastTransitionTime</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2025-04-16T22:15:18Z&quot;</span>
-</span></span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5"></a><span class="hll"><span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="hll"><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">lastTransitionTime</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2026-03-26T14:10:41Z&quot;</span>
+</span></span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5"></a><span class="hll"><span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Parent listener not usable or not permitted</span>
 </span></span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6"></a><span class="hll"><span class="w">      </span><span class="nt">observedGeneration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 </span></span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7"></a><span class="hll"><span class="w">      </span><span class="nt">reason</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NotAllowedByListeners</span>
 </span></span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8"></a><span class="hll"><span class="w">      </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;False&quot;</span>
 </span></span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9"></a><span class="hll"><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Accepted</span>
-</span></span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">lastTransitionTime</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2025-04-16T22:15:18Z&quot;</span>
+</span></span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">lastTransitionTime</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2026-03-26T14:10:41Z&quot;</span>
 </span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11"></a><span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
 </span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12"></a><span class="w">      </span><span class="nt">observedGeneration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 </span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13"></a><span class="w">      </span><span class="nt">reason</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ResolvedRefs</span>
 </span><span id="__span-25-14"><a id="__codelineno-25-14" name="__codelineno-25-14"></a><span class="w">      </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;True&quot;</span>
 </span><span id="__span-25-15"><a id="__codelineno-25-15" name="__codelineno-25-15"></a><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ResolvedRefs</span>
-</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16"></a><span class="w">    </span><span class="nt">controllerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kgateway.dev/kgateway</span>
+</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16"></a><span class="w">    </span><span class="nt">controllerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agentgateway.dev/agentgateway</span>
 </span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17"></a><span class="w">    </span><span class="nt">parentRef</span><span class="p">:</span>
 </span><span id="__span-25-18"><a id="__codelineno-25-18" name="__codelineno-25-18"></a><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.networking.k8s.io</span>
 </span><span id="__span-25-19"><a id="__codelineno-25-19" name="__codelineno-25-19"></a><span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gateway</span>
@@ -1476,8 +1492,9 @@ We must then make implementation decisions and, from the generated output, deriv
 </span><span id="__span-25-21"><a id="__codelineno-25-21" name="__codelineno-25-21"></a><span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agentgateway-system</span>
 </span><span id="__span-25-22"><a id="__codelineno-25-22" name="__codelineno-25-22"></a><span class="w">      </span><span class="nt">sectionName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">httpbin-https</span>
 </span></code></pre></div></td></tr></table></div>
-<p>The condition <em>"Accepted=False"</em> with the reason <em>"NotAllowedByListeners"</em> is due to the fact that the gateway is not configured to allow routes from different namespaces to attach to it.</p>
-<p>It stems from the decision we made to use a shared gateway and to place it in a separate namespace.
+<p>The condition <em>"Accepted=False"</em> with the reason <em>"NotAllowedByListeners"</em> is a permission error.
+The gateway is not configured to allow the attachment of routes outside its namespace.
+It stems from the decision to use a shared gateway and to place it in a separate namespace.
 Application namespaces must be designated such that routes defined within them are permitted to attach.</p>
 <p>Here is a revised Gateway resource with explicit <code>allowedRoutes</code> rules for each listener:</p>
 <div class="language-yaml highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">gateway-allows-routes.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-26-1"> 1</a></span>
@@ -1566,7 +1583,8 @@ Application namespaces must be designated such that routes defined within them a
 </span></span><span id="__span-26-42"><a id="__codelineno-26-42" name="__codelineno-26-42"></a><span class="hll"><span class="w">          </span><span class="nt">matchLabels</span><span class="p">:</span>
 </span></span><span id="__span-26-43"><a id="__codelineno-26-43" name="__codelineno-26-43"></a><span class="hll"><span class="w">            </span><span class="nt">self-serve-ingress</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
 </span></span></code></pre></div></td></tr></table></div>
-<p>Above, we define a convention: to label each namespace with <code>self-serve-ingress="true"</code> to allow both applications to define routes against the shared gateway:</p>
+<p>Above, we define a convention: a namespace labeled with <code>self-serve-ingress="true"</code> is allowed to define routes against the shared gateway.</p>
+<p>Apply the label to each <code>httpbin</code> and <code>bookinfo</code> namespaces:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span>label<span class="w"> </span>ns<span class="w"> </span>httpbin<span class="w"> </span>self-serve-ingress<span class="o">=</span><span class="nb">true</span>
 </span></code></pre></div>
 <p>And:</p>
@@ -1578,73 +1596,76 @@ Application namespaces must be designated such that routes defined within them a
 <p>Check the route status once more:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-route<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
-<p>This time the <em>Accepted</em> condition is <em>True</em>.</p>
-<p>We can also check on the status of the gateway itself:  each listener should have one attached route:</p>
+<p>Confirm that, this time, the <em>Accepted</em> condition is <em>True</em>.</p>
+<p>Also, check the status of the gateway itself:  each listener should have one attached route:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>agentgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-o<span class="w"> </span>yaml
+</span></code></pre></div>
+<p>Here is a more targeted command using a jsonpath query:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>agentgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-ojsonpath<span class="o">=</span><span class="s1">&#39;{.status.listeners[*].attachedRoutes}&#39;</span>
 </span></code></pre></div>
 <h3 id="send-test-requests">Send test requests</h3>
 <p>Send in some test requests through the new gateway.</p>
 <p>First, capture the new gateway IP address:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GW_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>agentgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-ojsonpath<span class="o">=</span><span class="s1">&#39;{.status.addresses[0].value}&#39;</span><span class="k">)</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GW_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>gtw<span class="w"> </span>-n<span class="w"> </span>agentgateway-system<span class="w"> </span>my-gateway<span class="w"> </span>-ojsonpath<span class="o">=</span><span class="s1">&#39;{.status.addresses[0].value}&#39;</span><span class="k">)</span>
 </span></code></pre></div>
 <p>Call <code>httpbin</code>:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>--insecure<span class="w"> </span>https://httpbin.example.com/headers<span class="w"> </span>--resolve<span class="w"> </span>httpbin.example.com:443:<span class="nv">$GW_IP</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>--insecure<span class="w"> </span>https://httpbin.example.com/headers<span class="w"> </span>--resolve<span class="w"> </span>httpbin.example.com:443:<span class="nv">$GW_IP</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </span></code></pre></div>
 <p>Verify that redirects work correctly by making a call over HTTP:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://httpbin.example.com/headers<span class="w"> </span>--resolve<span class="w"> </span>httpbin.example.com:80:<span class="nv">$GW_IP</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://httpbin.example.com/headers<span class="w"> </span>--resolve<span class="w"> </span>httpbin.example.com:80:<span class="nv">$GW_IP</span>
 </span></code></pre></div>
 <p>Call <code>bookinfo</code>:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>--insecure<span class="w"> </span>https://bookinfo.example.com/productpage<span class="w"> </span>--resolve<span class="w"> </span>bookinfo.example.com:443:<span class="nv">$GW_IP</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>title
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>--insecure<span class="w"> </span>https://bookinfo.example.com/productpage<span class="w"> </span>--resolve<span class="w"> </span>bookinfo.example.com:443:<span class="nv">$GW_IP</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>title
 </span></code></pre></div>
 <p>Verify that redirects work correctly for <code>bookinfo</code> as well:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://bookinfo.example.com/productpage<span class="w"> </span>--resolve<span class="w"> </span>bookinfo.example.com:80:<span class="nv">$GW_IP</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://bookinfo.example.com/productpage<span class="w"> </span>--resolve<span class="w"> </span>bookinfo.example.com:80:<span class="nv">$GW_IP</span>
 </span></code></pre></div>
 <p>Note the HTTP 301 (Moved permanently) response.</p>
 <h2 id="switching-over">Switching over</h2>
 <p>We have two gateways, and both are configured with equivalent rules, to route requests to <code>httpbin</code> and to <code>bookinfo</code>.
-One gateway is controlled by the ingress-nginx controller and uses the nginx proxy, while the other is controlled by kgateway and uses the Envoy proxy.
+One gateway is controlled by the ingress-nginx controller and uses the nginx proxy, while the other is controlled by the agentgateway controller and uses the agentgateway proxy.
 Each has its own distinct public IP address.</p>
-<p>Switching from ingress-nginx to kgateway is a matter of updating the DNS configuration for each host name:  alter the A record for <code>httpbin.example.com</code> to point to the new gateway IP address.</p>
+<p>Switching from ingress-nginx to agentgateway is a matter of updating the DNS configuration for each host name:  alter the A record for <code>httpbin.example.com</code> to point to the new gateway IP address.</p>
 <p>Monitor traffic through both gateways.
 You should notice that all traffic to the hostname now goes through the new gateway, while the old gateway will cease to receive traffic.</p>
 <p>Next, we can make the analogous DNS change for the <code>bookinfo</code> hostname, and observe that traffic begins to flow through the new gateway for <code>bookinfo</code> workloads too.</p>
-<p>This points to the fact that it is possible to migrate from ingress-nginx to kgateway in a piecemeal fashion:
-teams can work at different pace and each migrate to the new gateway on their own schedule.</p>
+<p>This points to the fact that it is possible to migrate from ingress-nginx to agentgateway in a piecemeal fashion:
+teams can work at a different pace, and each migrate to the new gateway on their own schedule.</p>
 <p>When all teams have completed their migration, we can finally decommission the old gateway.</p>
-<h2 id="decomission-ingress-nginx">Decomission ingress-nginx</h2>
+<h2 id="decommission-ingress-nginx">Decommission ingress-nginx</h2>
 <p>Decommissioning the old gateway involves undoing the original ingress setup:</p>
 <ol>
 <li>
 <p>Delete Ingress resources from each <code>bookinfo</code> and <code>httpbin</code> namespaces.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-ingress
-</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>bookinfo-ingress
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>httpbin<span class="w"> </span>httpbin-ingress
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>bookinfo<span class="w"> </span>bookinfo-ingress
 </span></code></pre></div>
 </li>
 <li>
 <p>Delete the secrets holding the server certificates from these namespaces too.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>httpbin-cert<span class="w"> </span>-n<span class="w"> </span>httpbin
-</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>bookinfo-cert<span class="w"> </span>-n<span class="w"> </span>bookinfo
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>httpbin-cert<span class="w"> </span>-n<span class="w"> </span>httpbin
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>bookinfo-cert<span class="w"> </span>-n<span class="w"> </span>bookinfo
 </span></code></pre></div>
 </li>
 <li>
 <p>Uninstall ingress-nginx.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>helm<span class="w"> </span>uninstall<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>helm<span class="w"> </span>uninstall<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
 <p>And:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>ingress-nginx
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>ingress-nginx
 </span></code></pre></div>
 </li>
 </ol>
 <h2 id="summary">Summary</h2>
 <p>This migration isn't the end of the road.
-kgateway provides capabilities that will take your environment well beyond what the original system could do:</p>
+agentgateway provides capabilities that will take your environment well beyond what the original system could do:</p>
 <ol>
-<li>Integrate kgateway with your Istio service mesh to gain encrypted communication with mutual TLS from the gateway to your mesh backend workloads.</li>
-<li>With ambient mesh, you can use kgateway as your waypoint, unlocking kgateway's capabilities for workloads running internally.</li>
-<li>Use kgateway as an egress gateway to control traffic exiting your environment.</li>
-<li>Use kgateway's AI capabilities to secure your LLM applications as they make requests to external LLM providers.</li>
+<li>Integrate agentgateway with your Istio service mesh to gain encrypted communication with mutual TLS from the gateway to your mesh backend workloads.</li>
+<li>With ambient mesh, you can use agentgateway as your waypoint, unlocking agentgateway's capabilities for workloads running internally.</li>
+<li>Use agentgateway as an egress gateway to control traffic exiting your environment.</li>
+<li>Use agentgateway's AI capabilities to proxy and secure agentic workloads:  agents, MCP servers, LLMs, etc..</li>
 </ol>
-<p>For more information about these capabilities, visit the <a href="https://kgateway.dev/">kgateway.dev</a> web site.</p>
+<p>For more information about these capabilities, visit the <a href="https://agentgateway.dev/">agentgateway.dev</a> web site.</p>
 
 
 
