@@ -1434,12 +1434,14 @@ We must then make implementation decisions and, from the generated output, deriv
 </span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15"></a><span class="w">        </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https</span>
 </span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16"></a><span class="w">        </span><span class="nt">statusCode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">301</span>
 </span></code></pre></div></td></tr></table></div>
-<p>Note:</p>
+<div class="admonition note">
+<p class="admonition-title">Notes</p>
 <ul>
 <li>We place this HTTPRoute in <code>agentgateway-system</code>; it is not a concern of the application development teams.</li>
 <li>The routing rule binds to (applies to) the <code>http</code> listener only.</li>
 <li>The rule uses the <a href="https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter">RequestRedirect</a> filter to redirect the request to the <code>https</code> scheme, otherwise preserving the original URL.</li>
 </ul>
+</div>
 <p>Apply the redirection rule:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>http-redirect.yaml
 </span></code></pre></div>

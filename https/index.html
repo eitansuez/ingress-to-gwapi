@@ -811,7 +811,10 @@
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>--insecure<span class="w"> </span>https://httpbin.example.com/get<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--resolve<span class="w"> </span>httpbin.example.com:443:<span class="nv">$GW_IP</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </span></code></pre></div>
-<p>Note that we have to add the <code>--insecure</code> flag because we are using self-signed certificates.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Above, we add the <code>--insecure</code> flag because we are using self-signed certificates.</p>
+</div>
 <p>Likewise for <code>bookinfo</code>:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>--insecure<span class="w"> </span>https://bookinfo.example.com/productpage<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--resolve<span class="w"> </span>bookinfo.example.com:443:<span class="nv">$GW_IP</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>title
