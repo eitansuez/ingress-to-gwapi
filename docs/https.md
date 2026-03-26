@@ -87,7 +87,9 @@ curl -s --insecure https://httpbin.example.com/get \
   --resolve httpbin.example.com:443:$GW_IP | jq
 ```
 
-Note that we have to add the `--insecure` flag because we are using self-signed certificates.
+!!! note
+
+    Above, we add the `--insecure` flag because we are using self-signed certificates.
 
 Likewise for `bookinfo`:
 

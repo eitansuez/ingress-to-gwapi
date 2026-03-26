@@ -250,11 +250,11 @@ Study the below routing rule:
 --8<-- "http-redirect.yaml"
 ```
 
-Note:
+!!! note "Notes"
 
-- We place this HTTPRoute in `agentgateway-system`; it is not a concern of the application development teams.
-- The routing rule binds to (applies to) the `http` listener only.
-- The rule uses the [RequestRedirect](https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter) filter to redirect the request to the `https` scheme, otherwise preserving the original URL.
+    - We place this HTTPRoute in `agentgateway-system`; it is not a concern of the application development teams.
+    - The routing rule binds to (applies to) the `http` listener only.
+    - The rule uses the [RequestRedirect](https://gateway-api.sigs.k8s.io/reference/spec/#httprequestredirectfilter) filter to redirect the request to the `https` scheme, otherwise preserving the original URL.
 
 Apply the redirection rule:
 

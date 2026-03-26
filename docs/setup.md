@@ -29,6 +29,10 @@ The main requirement is that the environment supports the assignment of an exter
         --port 443:443@loadbalancer
     ```
 
+    !!! note
+
+        A local setup also requires the installation of an implementation such as [MetalLB](https://metallb.io/) to assign IP addresses to load balancer type services.
+
 ## Deploy two distinct workloads
 
 Deploy two distinct applications, each to its own namespace:
