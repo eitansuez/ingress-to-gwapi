@@ -31,7 +31,7 @@ The main requirement is that the environment supports the assignment of an exter
 
     !!! note
 
-        A local setup also requires the installation of an implementation such as [MetalLB](https://metallb.io/) to assign IP addresses to load balancer type services.
+        A local setup also requires the installation of an implementation such as [MetalLB](https://metallb.io/) to assign IP addresses to LoadBalancer-type services.
 
 ## Deploy two distinct workloads
 
@@ -46,7 +46,8 @@ kubectl create ns httpbin
 ```
 
 ```shell
-kubectl apply -n httpbin -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
+kubectl apply --namespace httpbin \
+  -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/httpbin/httpbin.yaml
 ```
 
 ### `bookinfo`
@@ -58,7 +59,8 @@ kubectl create ns bookinfo
 ```
 
 ```shell
-kubectl apply -n bookinfo -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply --namespace bookinfo \
+  -f https://raw.githubusercontent.com/istio/istio/refs/heads/master/samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 
 Both sets of workloads should now be running in their respective namespaces:

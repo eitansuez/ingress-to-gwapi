@@ -134,22 +134,27 @@ Here are a number of alternative invocations of the tool to generate configurati
 
 The biggest difference by far between Ingress and Gateway API resources is that a single Ingress configuration maps to a pair of resources:  Gateway and an HTTPRoute.
 
-Let us study the output from `ingress2gateway`:
+Run the migration tool:
 
 ```shell
 ingress2gateway print --providers ingress-nginx --all-namespaces
 ```
 
-Like most tools, this one appears to perform direct translations:  for every Ingress resource, it produces a Gateway and an HTTPRoute.
-The tool does not perform intelligent analysis of the cluster, and will not take into account that there are two distinct applications where a plausible configuration would be to provision a single, shared gateway.
+Study the output:
 
 ```yaml title="generated-config.yaml" linenums="1"
 --8<-- "generated-config.yaml"
 ```
 
-The other glaring difference between what the tool produced compared to what a human would, is the repetition of the `backendRefs` section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule with multiple `matches` and a single `backendRef`.
+### Analysis
 
-Finally, the tool has no way of knowing (or does not provide a way to specify) what `gatewayClassName` to use for the translated resource, and so we must edit that value as well (to `agentgateway`).
+Like most tools, `ingress2gateway` appears to perform direct translations:  for every Ingress resource, it produces a Gateway and an HTTPRoute.
+The tool does not perform intelligent analysis of the cluster, and will not take into account that there are two distinct applications where a plausible configuration would be to provision a single, shared gateway.
+
+The other glaring difference between what the tool produced compared to what a human would can be seen in the generated HTTPRoute for the `bookinfo` application:
+the repetition of the `backendRefs` section across multiple routing rules, failing to realize that the same configuration can be simplified to a single rule consisting of multiple `matches` clauses and a single `backendRef`.
+
+Finally, the tool does not know what `gatewayClassName` to use for the translated resource, and so we must edit that value as well (to `agentgateway`).
 
 In summary, using `ingress2gateway` is useful and insightful, but produces only a starting point for review and evaluation.
 We must then make implementation decisions and, from the generated output, derive and craft the final Gateway API resource artifacts.
@@ -342,7 +347,7 @@ Also, check the status of the gateway itself:  each listener should have one att
 kubectl get gtw -n agentgateway-system my-gateway -o yaml
 ```
 
-Here is a more targeted command using a jsonpath query:
+Here is a more targeted command that uses a jsonpath query to confirm that we have one attached route per listener:
 
 ```shell
 kubectl get gtw -n agentgateway-system my-gateway -ojsonpath='{.status.listeners[*].attachedRoutes}'
@@ -442,4 +447,4 @@ agentgateway provides capabilities that will take your environment well beyond w
 1. Use agentgateway as an egress gateway to control traffic exiting your environment.
 1. Use agentgateway's AI capabilities to proxy and secure agentic workloads:  agents, MCP servers, LLMs, etc..
 
-For more information about these capabilities, visit the [agentgateway.dev](https://agentgateway.dev/) web site.
+For more information about these capabilities, visit [agentgateway.dev](https://agentgateway.dev/).
