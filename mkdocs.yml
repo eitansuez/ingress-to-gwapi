@@ -18,7 +18,7 @@ nav:
 - setup.md
 - ingress.md
 - https.md
-- migration.md
+- migrate.md
 markdown_extensions:
 - admonition
 - pymdownx.details

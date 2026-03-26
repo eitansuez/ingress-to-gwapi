@@ -22,7 +22,7 @@ This last point affords us the flexibility to use either shared gateways or dedi
 Certain applications require a higher degree of isolation.  This can be imposed by regulatory or other requirements, where traffic flowing to the target application cannot pass through a shared component, perhaps for security reasons, or to avoid other types of issues that stem from "noisy neighbors."
 On the other hand, for applications that do not require it, it's simpler and more cost effective to use a single shared gateway.
 
-## Gateway API compatible controller
+## Gateway API conformant controller
 
 The Gateway API documentation [lists](https://gateway-api.sigs.k8s.io/implementations/) implementations that conform to it.
 For this migration we will use [agentgateway](https://agentgateway.dev/), an open-source project recently contributed to the CNCF.
