@@ -29,15 +29,15 @@
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
-         <loc>https://eitansuez.github.io/ingress-to-gwapi/migrate/</loc>
-         <lastmod>2026-03-27</lastmod>
-    </url>
-    <url>
          <loc>https://eitansuez.github.io/ingress-to-gwapi/rate-limiting/</loc>
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
          <loc>https://eitansuez.github.io/ingress-to-gwapi/setup/</loc>
+         <lastmod>2026-03-27</lastmod>
+    </url>
+    <url>
+         <loc>https://eitansuez.github.io/ingress-to-gwapi/shared-gw/</loc>
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
