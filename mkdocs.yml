@@ -15,10 +15,17 @@ theme:
     primary: teal
 nav:
 - index.md
-- setup.md
-- ingress.md
-- https.md
-- migrate.md
+- Setup:
+  - setup.md
+  - ingress.md
+  - https.md
+- Migrate:
+  - install.md
+  - analysis.md
+  - migrate-httpbin.md
+  - rate-limiting.md
+  - basic-auth.md
+- summary.md
 markdown_extensions:
 - admonition
 - pymdownx.details

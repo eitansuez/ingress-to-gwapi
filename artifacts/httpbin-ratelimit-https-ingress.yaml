@@ -6,6 +6,7 @@ metadata:
   namespace: httpbin
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rpm: "3"
 spec:
   ingressClassName: nginx
   tls:

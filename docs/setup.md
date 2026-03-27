@@ -1,4 +1,4 @@
-# Setup
+# Deploy workloads
 
 ## Provision a cluster
 

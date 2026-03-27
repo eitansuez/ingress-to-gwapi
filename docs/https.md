@@ -1,4 +1,4 @@
-# HTTPS
+# Configure TLS
 
 Real-world scenarios for ingress rarely serve traffic over HTTP.
 

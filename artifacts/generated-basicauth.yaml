@@ -1,0 +1,91 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    gateway.networking.k8s.io/generator: ingress2gateway-v0.4.0
+  name: nginx
+  namespace: httpbin
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+  - hostname: httpbin.example.com
+    name: httpbin-example-com-http
+    port: 80
+    protocol: HTTP
+  - hostname: httpbin.example.com
+    name: httpbin-example-com-https
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - group: null
+        kind: null
+        name: httpbin-cert
+status: {}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gateway.networking.k8s.io/generator: ingress2gateway-v0.4.0
+  name: httpbin-ingress-httpbin-example-com-http-redirect
+  namespace: httpbin
+spec:
+  hostnames:
+  - httpbin.example.com
+  parentRefs:
+  - name: nginx
+    sectionName: httpbin-example-com-http
+  rules:
+  - filters:
+    - requestRedirect:
+        scheme: https
+        statusCode: 301
+      type: RequestRedirect
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+status:
+  parents: []
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gateway.networking.k8s.io/generator: ingress2gateway-v0.4.0
+  name: httpbin-ingress-httpbin-example-com-https
+  namespace: httpbin
+spec:
+  hostnames:
+  - httpbin.example.com
+  parentRefs:
+  - name: nginx
+    sectionName: httpbin-example-com-https
+  rules:
+  - backendRefs:
+    - name: httpbin
+      port: 8000
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+status:
+  parents: []
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: httpbin-ingress
+  namespace: httpbin
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: httpbin-ingress-httpbin-example-com-https
+  traffic:
+    basicAuthentication:
+      secretRef:
+        name: basic-auth
+status:
+  ancestors: null
