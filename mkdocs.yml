@@ -25,6 +25,7 @@ nav:
   - migrate-httpbin.md
   - rate-limiting.md
   - basic-auth.md
+  - shared-gw.md
 - summary.md
 markdown_extensions:
 - admonition

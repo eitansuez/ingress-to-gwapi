@@ -1,4 +1,4 @@
-# Analysis and design
+# Analysis & Design
 
 ## Translating Ingress configurations
 
