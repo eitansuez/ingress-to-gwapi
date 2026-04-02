@@ -21,7 +21,7 @@ For details, see [the examples](https://agentgateway.dev/docs/kubernetes/latest/
 
 We also looked at taking a different approach, and building out a shared gateway for both applications.  This is an equally valid approach.
 
-By migrating away from ingress-nginx, you not only eliminate technical debt, but are also avoiding a security issues with a release that is no longer maintained.
+By migrating away from ingress-nginx, you not only eliminate technical debt, but are also avoiding security issues with a release that is no longer maintained.
 
 Perhaps just as importantly, you are now in a position to take advantage of the AI capabilities of the agentgateway project, and other capabilities that will take your environment well beyond what the original system could do:
 
