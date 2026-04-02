@@ -54,7 +54,7 @@ kubectl create secret tls bookinfo-cert -n bookinfo \
 
 Below, note the addition of a `tls` section that references the secret you just created in association with the hostname `httpbin.example.com`:
 
-```yaml linenums="1" title="httpbin-https-ingress.yaml" hl_lines="9-12"
+```yaml linenums="1" title="httpbin-https-ingress.yaml" hl_lines="11-14"
 --8<-- "httpbin-https-ingress.yaml"
 ```
 
@@ -68,7 +68,7 @@ kubectl apply -f httpbin-https-ingress.yaml
 
 Similarly, for `bookinfo` we add a `tls` configuration section referencing its certificate:
 
-```yaml linenums="1" title="bookinfo-https-ingress.yaml" hl_lines="9-12"
+```yaml linenums="1" title="bookinfo-https-ingress.yaml" hl_lines="11-14"
 --8<-- "bookinfo-https-ingress.yaml"
 ```
 
