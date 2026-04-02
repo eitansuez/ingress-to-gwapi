@@ -3,6 +3,7 @@ site_name = "Migrating from Ingress to Gateway API"
 site_description = "A hands-on workshop on migrating from Ingress and ingress-nginx to the Gateway API and AgentGateway."
 site_author = "Eitan Suez"
 site_url = "https://eitansuez.github.io/ingress-to-gwapi"
+repo_url = "https://github.com/eitansuez/ingress-to-gwapi"
 
 # The copyright notice appears in the page footer and can contain an HTML fragment.
 # Read more @ https://zensical.org/docs/setup/basics/#copyright
@@ -145,15 +146,14 @@ features = [
 #code = "Jetbrains Mono"
 
 [[project.theme.palette]]
-scheme = "default"
-#primary = "teal"
-toggle.icon = "lucide/sun"
-toggle.name = "Switch to dark mode"
-
-[[project.theme.palette]]
 scheme = "slate"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
 
 #[[project.extra.social]]
 #icon = "fontawesome/brands/github"
