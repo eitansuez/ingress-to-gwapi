@@ -4,7 +4,7 @@ Back in [Analysis & Design](analysis.md), we decided to perform a first-pass mig
 
 In this section, we look at the alternative: of instead configuring a single shared gateway for both `httpbin` and `bookinfo` applications.
 
-In this scenario, we eschew the use of the migration tool which, as we saw, is more suited for a one-to-one mapping between the original Ingress resources and Gateway+HttpRoute pairs.
+In this scenario, we eschew the use of the migration tool which, as we saw, is more suited for a one-to-one mapping between the original Ingress resources and Gateway+HTTPRoute pairs.
 
 Let us proceed then, to provision a single gateway, with two separate HTTPRoute resources, one per application.
 
