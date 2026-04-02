@@ -114,7 +114,7 @@ Transitioning to a shared gateway can be evaluated later, where it makes sense, 
 
 The `ingress2gateway` tool is [designed for extension](https://github.com/kubernetes-sigs/ingress2gateway/blob/main/docs/emitters.md) through the concept of providers and emitters.
 
-AgentGateway supports migration from ingress-nginx with [a fork of the ingress2gateway](https://agentgateway.dev/docs/kubernetes/latest/migrate/) migration tool the supplies a bespoke emitter.
+AgentGateway supports migration from ingress-nginx with [a fork of the ingress2gateway](https://agentgateway.dev/docs/kubernetes/latest/migrate/) migration tool that supplies a bespoke emitter.
 
 This tool knows how to translate ingress-nginx specific annotations to agentgateway-specific resources that naturally extend the Kubernetes Gateway API in places where the feature or capability is absent from the spec:  for features such as rate limiting, CORS support, authentication.
 
