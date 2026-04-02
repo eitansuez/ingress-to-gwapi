@@ -14,7 +14,7 @@ In other words, in large enterprise environments, we need to accommodate teams t
 
 The [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) improves upon the Ingress model in a number of ways:
 
-- Routing and Gateway-specific concerns are separate concerns, and are configured through distinct resources.  Routes attach to Gateways.
+- Routing is a separate concern from Gateway configuration; each is configured through distinct resources.  Routes attach to Gateways.
 - Personas are taken into account: platform administrators configure gateways while applications teams self-service routing rules for their apps.
 - The creation of the Gateway resource also provisions the gateway, on-demand.
 

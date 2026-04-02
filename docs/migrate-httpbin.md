@@ -5,6 +5,11 @@ Let us assume that we are members of the team managing the `httpbin` app or serv
 We will scope the migration of just that application to agentgateway.
 The idea is for each team to work independently, at its own pace, to migrate their applications.
 
+## Setup
+
+Be sure that you have agentgateway-specific version of `ingress2gateway` installed.
+If not, then head to the [install section](https://agentgateway.dev/docs/kubernetes/latest/migrate/install/) of the docs and follow the installation instructions.
+
 ## Run the tool
 
 Run the migration tool:

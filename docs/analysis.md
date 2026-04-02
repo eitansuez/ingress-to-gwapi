@@ -107,7 +107,7 @@ Using a dedicated gateway per team is a simpler approach:
 
 The ability to gradually migrate to the Gateway API on a team-by-team basis is compelling.
 
-We choose to go with dedicate gateway model initially.
+We opt for the dedicated gateway model initially.
 Transitioning to a shared gateway can be evaluated later, where it makes sense, and can be left as a follow-up refinement.
 
 ## AgentGateway specific migration tool
@@ -118,7 +118,7 @@ AgentGateway supports migration from ingress-nginx with [a fork of the ingress2g
 
 This tool knows how to translate ingress-nginx specific annotations to agentgateway-specific resources that naturally extend the Kubernetes Gateway API in places where the feature or capability is absent from the spec:  for features such as rate limiting, CORS support, authentication.
 
-When invoking the tool, we specify an `--emitter` flag that tells the tool what implementation we are targeting
+When invoking the tool, we specify an `--emitter` flag that tells the tool what implementation we are targeting.
 
 Here is an example:
 
