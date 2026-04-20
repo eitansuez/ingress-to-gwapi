@@ -24,7 +24,8 @@ On the other hand, for applications that do not require it, it's more cost effec
 
 ## Gateway API conformant controller
 
-The Gateway API documentation [lists](https://gateway-api.sigs.k8s.io/implementations/) implementations that conform to it.
+The Gateway API documentation [lists](https://gateway-api.sigs.k8s.io/implementations/#gateway-controller-implementation-status) implementations that conform to it.
+
 For this migration we will use [agentgateway](https://agentgateway.dev/), an open-source project recently contributed to the Linux Foundation.
 
 ### Install agentgateway

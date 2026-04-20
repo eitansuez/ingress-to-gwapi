@@ -42,7 +42,7 @@ Teams that today still use the venerable Ingress API and the ingress-nginx contr
 
 ## Which proxy?
 
-The Kubernetes Gateway API gives users a standard, and many alternative implementations to choose from, as attested by the long [list of implementations](https://gateway-api.sigs.k8s.io/implementations/).
+The Kubernetes Gateway API gives users a standard, and many alternative implementations to choose from, as attested by the long [list of implementations](https://gateway-api.sigs.k8s.io/implementations/#gateway-controller-implementation-status).
 
 Certain implementations leverage NGINX, others HA-Proxy or something else. Those proxies existed long before Kubernetes.
 A relatively newer proxy (and open-source CNCF project) is [Envoy](https://www.envoyproxy.io/), which has been described as a "cloud-native" proxy for the Kubernetes age.
